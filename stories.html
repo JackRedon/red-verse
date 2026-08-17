@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Red Verse - Stories</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+
+<body>
+
+<h1 style="color:red;">TEST - STORIES PAGE</h1>
+
+    <!-- NAVIGATION -->
+
+    <header class="navbar">
+
+        <div class="logo">
+            RED VERSE
+        </div>
+
+        <nav>
+            <a href="index.html">HOME</a>
+            <a href="index.html#characters">CHARACTERS</a>
+            <a href="index.html#worlds">WORLDS</a>
+            <a href="stories.html">STORIES</a>
+            <a href="index.html#lore">LORE</a>
+        </nav>
+
+        <button class="menu-button" onclick="toggleMenu()">?</button>
+
+    </header>
+
+
+    <!-- STORIES -->
+
+    <main class="stories-page">
+
+        <div class="stories-header">
+
+            <p class="eyebrow">
+                RED VERSE
+            </p>
+
+            <h1>
+                STORIES
+            </h1>
+
+            <p>
+                Explore the stories and lore of the Red Verse.
+            </p>
+
+        </div>
+
+
+        <!-- FILTER -->
+
+        <div class="story-filters">
+
+            <button
+                class="story-filter active"
+                onclick="sortStories('normal', this)"
+            >
+                RELEASE
+            </button>
+
+            <button
+                class="story-filter"
+                onclick="sortStories('timeline', this)"
+            >
+                TIMELINE
+            </button>
+
+            <button
+                class="story-filter"
+                onclick="sortStories('az', this)"
+            >
+                A-Z
+            </button>
+
+        </div>
+
+
+        <!-- STORY GRID -->
+
+        <div
+            class="story-grid"
+            id="storyGrid"
+        >
+
+            <!-- JAMES GOLDSMAN 1 -->
+
+            <article
+                class="story-card"
+                data-title="James Goldsman 1"
+                data-published="1"
+                data-timeline="2"
+            >
+
+                <div class="story-card-content">
+
+                    <p class="eyebrow">
+                        JAMES GOLDSMAN
+                    </p>
+
+                    <h2>
+                        THE STORY OF THE TECH BOY
+                    </h2>
+
+                    <p>
+                        A story about James Goldsman.
+                    </p>
+
+                    <a
+                        href="story-james-goldsman-1.html"
+                        class="red-button"
+                    >
+                        READ STORY
+                    </a>
+
+                </div>
+
+            </article>
+
+
+            <!-- JESTER DAWN 1 -->
+
+            <article
+                class="story-card"
+                data-title="Jester Dawn 1"
+                data-published="2"
+                data-timeline="1"
+            >
+
+                <div class="story-card-content">
+
+                    <p class="eyebrow">
+                        JESTER DAWN
+                    </p>
+
+                    <h2>
+                        HAPPY FACE, SAD LIFE
+                    </h2>
+
+                    <p>
+                        A story about Jester Dawn.
+                    </p>
+
+                    <button
+                        class="outline-button"
+                        disabled
+                    >
+                        UPCOMING
+                    </button>
+
+                </div>
+
+            </article>
+
+
+            <!-- RED    1 -->
+
+            <article
+                class="story-card"
+                data-title="Jack Redon 1"
+                data-published="3"
+                data-timeline="3"
+            >
+
+                <div class="story-card-content">
+
+                    <p class="eyebrow">
+                        JACK REDON
+                    </p>
+
+                    <h2>
+                        A DIAMOND'S BIND
+                    </h2>
+
+                    <p>
+                        A story about Jack Redon.
+                    </p>
+
+                    <button
+                        class="outline-button"
+                        disabled
+                    >
+                        UPCOMING
+                    </button>
+
+                </div>
+
+            </article>
+
+
+            <!-- ALEX SAKURO 1 -->
+
+            <article
+                class="story-card"
+                data-title="Alex Sakuro 1"
+                data-published="4"
+                data-timeline="4"
+            >
+
+                <div class="story-card-content">
+
+                    <p class="eyebrow">
+                        ALEX SAKURO
+                    </p>
+
+                    <h2>
+                        CAUGHT BETWEEN THE LINES OF DUTY
+                    </h2>
+
+                    <p>
+                        A story about Alex Sakuro.
+                    </p>
+
+                    <button
+                        class="outline-button"
+                        disabled
+                    >
+                        UPCOMING
+                    </button>
+
+                </div>
+
+            </article>
+
+
+            <!-- MAC WHITLOCK 1 -->
+
+            <article
+                class="story-card"
+                data-title="Mac Whitlock 1"
+                data-published="5"
+                data-timeline="5"
+            >
+
+                <div class="story-card-content">
+
+                    <p class="eyebrow">
+                        MAC WHITLOCK
+                    </p>
+
+                    <h2>
+                        CRYING BLADE
+                    </h2>
+
+                    <p>
+                        A story about Mac Whitlock.
+                    </p>
+
+                    <button
+                        class="outline-button"
+                        disabled
+                    >
+                        UPCOMING
+                    </button>
+
+                </div>
+
+            </article>
+
+        </div>
+
+    </main>
+
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        <h2>RED VERSE</h2>
+
+        <p>
+            The official Encyclopedia of The Red Verse.
+        </p>
+
+        <p class="copyright">
+            © 2026 Red Verse
+        </p>
+
+    </footer>
+
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>

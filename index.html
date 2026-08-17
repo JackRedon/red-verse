@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>The Red Verse Universe</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- NAVIGATION -->
+
+    <header class="navbar">
+
+        <div class="logo">
+            RED VERSE
+        </div>
+
+        <nav>
+            <a href="#home">HOME</a>
+            <a href="#characters">CHARACTERS</a>
+            <a href="#worlds">WORLDS</a>
+            <a href="#lore">LORE</a>
+            <a href="#map">MAP</a>
+        </nav>
+
+        <button class="menu-button" onclick="toggleMenu()">?</button>
+
+    </header>
+
+
+    <!-- HERO -->
+
+    <section id="home" class="hero">
+
+        <div class="hero-content">
+
+            <p class="eyebrow">THE OFFICIAL ENCYCLOPEDIA</p>
+
+            <h1>THE RED VERSE</h1>
+
+            <h2>UNIVERSE</h2>
+
+            <p class="hero-description">
+                Keep up with the latest Stories, Explore the Characters, Worlds, Histories, and Timelines of the Red Verse.
+            </p>
+
+            <div class="hero-buttons">
+
+                <a href="#characters" class="red-button">
+                    EXPLORE THE UNIVERSE
+                </a>
+
+                <a href="#lore" class="outline-button">
+                    DISCOVER THE LORE
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- CHARACTERS -->
+
+    <section id="characters" class="characters-section">
+
+        <div class="section-heading">
+
+            <p class="eyebrow">RED VERSE</p>
+
+            <h2>CHARACTERS</h2>
+
+            <p>
+                Follow the Journey, Story, and Arcs of Red Verse's Characters.
+            </p>
+
+        </div>
+
+
+        <!-- SEARCH -->
+
+<div class="character-controls">
+
+        <div class="search-container">
+
+            <input
+                type="text"
+                id="characterSearch"
+                placeholder="Search characters..."
+                onkeyup="searchCharacters()"
+            >
+
+        </div>
+
+</div>
+
+
+        <!-- CHARACTER GRID -->
+
+        <div class="character-grid" id="characterGrid">
+
+
+            <!-- JACK -->
+
+            <div
+                class="character-card"
+                data-name="Jack Redon Red The Red Diamond"
+                onclick="openCharacter('jack')"
+            >
+
+                <div class="character-image jack">
+
+                    <div class="character-overlay"></div>
+
+                    <div class="character-info">
+
+                        <p>THE RED DIAMOND</p>
+
+                        <h3>JACK REDON</h3>
+
+                        <span>RED</span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- JAMES -->
+
+            <div
+                class="character-card"
+                data-name="James Goldsman"
+                onclick="openCharacter('james')" 
+	>
+
+                <div class="character-image james">
+
+                    <div class="character-overlay"></div>
+
+                    <div class="character-info">
+
+                        <p>THE AID OF THE LIGHT</p>
+
+                        <h3>JAMES GOLDSMAN</h3>
+
+                        <span>JAMES</span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- JESTER -->
+
+            <div
+                class="character-card"
+                data-name="Jester Dawn"
+                onclick="openCharacter('jester')"
+            >
+
+                <div class="character-image jester">
+
+                    <div class="character-overlay"></div>
+
+                    <div class="character-info">
+
+                        <p>THE JESTER OF CHAOS</p>
+
+                        <h3>JESTER DAWN</h3>
+
+                        <span>JESTER ICANTHI</span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ALEX -->
+
+            <div
+                class="character-card"
+                data-name="Alex Sakuro"
+                onclick="openCharacter('alex')"
+            >
+
+                <div class="character-image alex">
+
+                    <div class="character-overlay"></div>
+
+                    <div class="character-info">
+
+                        <p>THE PRINCESS ASSASSIN</p>
+
+                        <h3>ALEX SAKURO</h3>
+
+                        <span>SHINOBI</span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+	    <!-- MAC -->
+
+            <div
+                class="character-card"
+                data-name="Mac Whitlock"
+                onclick="openCharacter('mack')"
+            >
+
+                <div class="character-image mac">
+
+                    <div class="character-overlay"></div>
+
+                    <div class="character-info">
+
+                        <p>THE TRAGIC BLADE</p>
+
+                        <h3>ALEXANDER MACKLEMORE WHITLOCK</h3>
+
+                        <span>MAC</span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- WORLDS -->
+
+    <section id="worlds" class="dark-section">
+
+        <div class="section-heading">
+
+            <p class="eyebrow">RED VERSE</p>
+
+            <h2>UNIVERSES</h2>
+
+            <p>
+                Explore the vast Worlds, Realities, and Universes of the Red Verse.
+            </p>
+
+        </div>
+
+        <div class="world-grid">
+
+            <div class="world-card">
+                <div>
+                    <p>UNIVERSE 526</p>
+                    <h3>THE REDVERSE</h3>
+                </div>
+            </div>
+
+            <div class="world-card">
+                <div>
+                    <p>UNIVERSE 22</p>
+                    <h3>THE OLYMPICUS UNIVERSE</h3>
+                </div>
+            </div>
+
+            <div class="world-card">
+                <div>
+                    <p>UNIVERSE 32</p>
+                    <h3>THE BLADE UNIVERSE</h3>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- LORE -->
+
+   <section id="lore" class="lore-section">
+
+    <div class="lore-content">
+
+        <p class="eyebrow">RED VERSE</p>
+
+        <h2>LORE, HISTORY, & STORIES</h2>
+
+        <p>
+            Explore the stories, histories, and events that
+            shaped the Red Verse.
+        </p>
+
+        <a href="stories.html" class="red-button">
+            READ THE STORIES
+        </a>
+
+    </div>
+
+</section>
+
+
+    <!-- MAP -->
+
+    <section id="map" class="map-section">
+
+        <div>
+
+            <p class="eyebrow">EXPLORE THE WORLD</p>
+
+            <h2>INTERACTIVE MAP</h2>
+
+            <p>
+                Explore the vast worlds of the Red Verse.
+            </p>
+
+            <button class="outline-button" onclick="openMap()">
+                OPEN MAP
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- CHARACTER MODAL -->
+
+    <div id="characterModal" class="modal">
+
+        <div class="modal-content">
+
+            <button
+                class="close-button"
+                onclick="closeCharacter()"
+            >
+                ×
+            </button>
+
+            <p id="modalTitle" class="eyebrow"></p>
+
+            <h2 id="modalName"></h2>
+
+            <p id="modalDescription"></p>
+
+
+            <div class="ability-box">
+
+                <h3>ABILITIES</h3>
+
+                <ul id="modalAbilities"></ul>
+
+            </div>
+
+
+            <div class="profile-buttons">
+
+                <button
+                    class="red-button"
+                    onclick="closeCharacter()"
+                >
+                    BACK TO CHARACTERS
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        <h2>RED VERSE</h2>
+
+        <p>
+            The official Encyclopedia of The Red Verse.
+        </p>
+
+        <p class="copyright">
+            © 2026 Red Verse
+        </p>
+
+    </footer>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>
