@@ -18,16 +18,24 @@
         <div class="logo">
             RED VERSE
         </div>
-
+ 
         <nav>
-            <a href="#home">HOME</a>
+            <a href=#home">HOME</a>
             <a href="#characters">CHARACTERS</a>
             <a href="#worlds">WORLDS</a>
             <a href="#lore">LORE</a>
             <a href="#map">MAP</a>
         </nav>
 
-        <button class="menu-button" onclick="toggleMenu()">?</button>
+        <button class="menu-button" 
+onclick="toggleExtraMenu()" aria-label="Open menu">
+		â‰¡
+	</button>
+
+	<div class="extra-menu" id="extraMenu">
+		<a href="rules.html">ABOUT RED VERSE</a>
+
+</div>
 
     </header>
 
@@ -86,20 +94,18 @@
 
 <div class="character-controls">
 
-        <div class="search-container">
+    <div class="search-container">
 
-            <input
-                type="text"
-                id="characterSearch"
-                placeholder="Search characters..."
-                onkeyup="searchCharacters()"
-            >
+        <input
+            type="text"
+            id="characterSearch"
+            placeholder="Find your Character..."
+            onkeyup="searchCharacters()"
+        >
 
-        </div>
+    </div>
 
 </div>
-
-
         <!-- CHARACTER GRID -->
 
         <div class="character-grid" id="characterGrid">
@@ -110,6 +116,7 @@
             <div
                 class="character-card"
                 data-name="Jack Redon Red The Red Diamond"
+		data-order="1"
                 onclick="openCharacter('jack')"
             >
 
@@ -137,6 +144,7 @@
             <div
                 class="character-card"
                 data-name="James Goldsman"
+		data-order="2"
                 onclick="openCharacter('james')" 
 	>
 
@@ -164,6 +172,7 @@
             <div
                 class="character-card"
                 data-name="Jester Dawn"
+		data-order="3"
                 onclick="openCharacter('jester')"
             >
 
@@ -191,6 +200,7 @@
             <div
                 class="character-card"
                 data-name="Alex Sakuro"
+		data-order="4"
                 onclick="openCharacter('alex')"
             >
 
@@ -217,6 +227,7 @@
             <div
                 class="character-card"
                 data-name="Mac Whitlock"
+		data-order="5"
                 onclick="openCharacter('mack')"
             >
 
@@ -228,7 +239,7 @@
 
                         <p>THE TRAGIC BLADE</p>
 
-                        <h3>ALEXANDER MACKLEMORE WHITLOCK</h3>
+                        <h3>MAC WHITLOCK</h3>
 
                         <span>MAC</span>
 
@@ -322,7 +333,7 @@
             <h2>INTERACTIVE MAP</h2>
 
             <p>
-                Explore the vast worlds of the Red Verse.
+                Explore the vast world of the Red Verse.
             </p>
 
             <button class="outline-button" onclick="openMap()">
@@ -332,7 +343,6 @@
         </div>
 
     </section>
-
 
     <!-- CHARACTER MODAL -->
 
@@ -344,7 +354,7 @@
                 class="close-button"
                 onclick="closeCharacter()"
             >
-                ×
+                Ã—
             </button>
 
             <p id="modalTitle" class="eyebrow"></p>
@@ -390,7 +400,7 @@
         </p>
 
         <p class="copyright">
-            © 2026 Red Verse
+            Â© 2026 Red Verse
         </p>
 
     </footer>
