@@ -1224,3 +1224,831 @@ footer .copyright {
     }
 
 }
+
+.story-popup {
+	display:none;
+	position: fixed; 
+	z-index: 1000;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+
+	background: rgba(0, 0, 0, 0.8);
+
+	justify0content: center;
+	align-items: center;
+}
+
+.story-box {
+	position: relative;
+
+	width: 80%;
+	max-width: 800px;
+	max-height; 80vh;
+
+	padding: 40px;
+		
+	background: #17120f;
+	color: white;
+
+	border: 2px solid #8b5a2b;
+	border-radius: 12px;
+
+	overflow-y: auto;
+
+	box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+}
+
+.story-box h1 {
+	text-align: center;
+	margin-bottom: 25px;
+}
+
+.story-box p {
+	font-size: 17px;
+	line-height: 1.7;
+}
+
+.close-button {
+	position: absolute; 
+	top: 10px;
+	right: 15px;
+
+	background: none;
+	border: none;
+		
+	color: white; 
+	font-size: 30px;
+
+	cursor: pointer;
+}
+
+.close-button:hover {
+	color: #c9a66b;
+}
+
+/* EXTRA HAMBURGER MENU */
+
+.menu-button {
+    display: block;
+
+    background: none;
+    border: none;
+
+    color: white;
+
+    font-size: 26px;
+    cursor: pointer;
+
+    padding: 8px;
+
+    transition: 0.3s;
+}
+
+.menu-button:hover {
+    color: #d00000;
+}
+
+
+/* DROPDOWN */
+
+.extra-menu {
+    position: absolute;
+
+    top: 75px;
+    right: 5%;
+
+    width: 240px;
+
+    background: black;
+
+    border: 1px solid #333;
+
+    box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+
+    display: none;
+
+    z-index: 1500;
+}
+
+
+/* OPEN STATE */
+
+.extra-menu.active {
+    display: block;
+}
+
+
+/* MENU LINKS */
+
+.extra-menu a {
+    display: block;
+
+    padding: 18px 22px;
+
+    color: #ccc;
+
+    text-decoration: none;
+
+    font-size: 12px;
+
+    font-weight: bold;
+
+    letter-spacing: 1.5px;
+
+    border-bottom: 1px solid #222;
+
+    transition: 0.3s;
+}
+
+.extra-menu a:last-child {
+    border-bottom: none;
+}
+
+.extra-menu a:hover {
+    background: black;
+
+    color: #d00000;
+
+    padding-left: 28px;
+}
+
+/*cABOUT RED VERSE PAGE */
+
+.about-page {
+    min-height: 100vh;
+
+    padding: 160px 7% 100px;
+
+    background:
+        radial-gradient(
+            circle at 50% 0%,
+            rgba(120,0,0,0.2),
+            transparent 35%
+        ),
+        #080808;
+}
+
+
+/* ABOUT HEADER */
+
+.about-header {
+    max-width: 900px;
+
+    margin: 0 auto;
+
+    text-align: center;
+}
+
+.about-header h1 {
+    font-size: clamp(60px, 10vw, 120px);
+
+    line-height: 0.85;
+
+    letter-spacing: -4px;
+
+    margin-bottom: 30px;
+}
+
+.about-subtitle {
+    max-width: 650px;
+
+    margin: 0 auto;
+
+    color: #aaa;
+
+    font-size: 19px;
+
+    line-height: 1.8;
+}
+
+
+/* DIVIDER */
+
+.about-divider {
+    width: 100%;
+
+    max-width: 1000px;
+
+    height: 1px;
+
+    margin: 80px auto;
+
+    background: #292929;
+}
+
+
+/* ABOUT SECTIONS */
+
+.about-section {
+    max-width: 900px;
+
+    margin: 0 auto 100px;
+}
+
+.about-section h2 {
+    font-size: clamp(40px, 6vw, 70px);
+
+    line-height: 0.95;
+
+    margin-bottom: 30px;
+}
+
+.about-section > p:not(.eyebrow) {
+    max-width: 750px;
+
+    color: #aaa;
+
+    font-size: 18px;
+
+    line-height: 1.9;
+
+    margin-bottom: 20px;
+}
+
+
+/* ABOUT CARDS */
+
+.about-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 20px;
+
+    margin-top: 50px;
+}
+
+.about-card {
+    display: block;
+
+    min-height: 240px;
+
+    padding: 35px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #181818,
+            #080808
+        );
+
+    border: 1px solid #252525;
+
+    transition: 0.4s;
+
+    text-decoration: none;
+
+    color: white;
+
+    cursor: pointer;
+}
+
+
+/* PREVENT PURPLE VISITED LINK */
+
+.about-card:visited {
+    color: white;
+
+    text-decoration: none;
+}
+
+
+/* HOVER */
+
+.about-card:hover {
+    transform: translateY(-6px);
+
+    border-color: #8d0000;
+
+    color: white;
+
+    text-decoration: none;
+}
+
+
+/* CLICK */
+
+.about-card:active {
+    color: white;
+
+    text-decoration: none;
+}
+
+.about-card h3 {
+    color: white;
+
+    font-size: 24px;
+
+    letter-spacing: 2px;
+
+    margin-bottom: 20px;
+}
+
+.about-card p {
+    color: #999;
+
+    line-height: 1.7;
+}
+
+
+/* ABOUT ENDING */
+
+.about-ending {
+    max-width: 900px;
+
+    margin: 120px auto 0;
+
+    padding: 70px 20px;
+
+    text-align: center;
+
+    border-top: 1px solid #292929;
+
+    border-bottom: 1px solid #292929;
+}
+
+.about-ending h2 {
+    font-size: clamp(35px, 6vw, 65px);
+
+    letter-spacing: 2px;
+
+    margin-bottom: 20px;
+
+	color: #FF0000;
+}
+
+.about-ending p {
+    color: #888;
+
+    font-size: 17px;
+}
+
+
+/* ABOUT MOBILE */
+
+@media (max-width: 700px) {
+
+    .about-page {
+        padding: 130px 20px 70px;
+    }
+
+    .about-header h1 {
+        font-size: 60px;
+
+        letter-spacing: -2px;
+    }
+
+    .about-subtitle {
+        font-size: 17px;
+    }
+
+    .about-section {
+        margin-bottom: 70px;
+    }
+
+    .about-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .about-card {
+        min-height: auto;
+
+        padding: 30px;
+    }
+
+    .about-ending {
+        margin-top: 80px;
+
+        padding: 50px 15px;
+    }
+
+}
+
+/* RED VERSE GLOBAL SCROLLBAR */
+
+html {
+	scrollbar-width: auto;
+	scrollbar-color: #ffffff #111111;
+}
+
+/* Chrome, Edge, Safari */
+
+::-webkit-scrollbar {
+	width: 10px;
+}
+
+::-webkit-scrollbar-track {
+	background: #111111;
+}
+
+::webkit-scrollbar-thumb {
+	background: white;
+	border: 2px solid #111111;
+	border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: #d00000;
+}
+
+/* GAME */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #080808;
+    color: white;
+    font-family: Arial, sans-serif;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    height: 100vh;
+
+    overflow: hidden;
+}
+
+#game {
+    position: relative;
+
+    width: 1000px;
+    height: 650px;
+
+    border: 3px solid #333;
+
+    background: #111;
+
+    overflow: hidden;
+}
+
+canvas {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    image-rendering: pixelated;
+}
+
+
+/* =========================
+   HUD
+========================= */
+
+#hud {
+    position: absolute;
+
+    inset: 0;
+
+    pointer-events: none;
+}
+
+
+/* PLAYER INFO */
+
+#playerInfo {
+    position: absolute;
+
+    top: 15px;
+    left: 15px;
+
+    width: 260px;
+
+    padding: 12px;
+
+    background: rgba(0,0,0,.75);
+
+    border: 2px solid #333;
+
+    border-radius: 6px;
+}
+
+.playerName {
+    font-size: 18px;
+
+    font-weight: bold;
+
+    margin-bottom: 8px;
+}
+
+.stat {
+    display: flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    margin-bottom: 5px;
+
+    font-size: 10px;
+}
+
+.stat > span:first-child {
+    width: 45px;
+}
+
+.bar {
+    flex: 1;
+
+    height: 10px;
+
+    background: #222;
+
+    border: 1px solid #111;
+}
+
+.bar div {
+    height: 100%;
+
+    width: 100%;
+}
+
+.hp {
+    background: #d93636;
+}
+
+.mana {
+    background: #3d7cff;
+}
+
+.hunger {
+    background: #e3a52d;
+}
+
+.energy {
+    background: #55c76f;
+}
+
+.level {
+    margin-top: 8px;
+
+    font-size: 11px;
+
+    color: #ccc;
+}
+
+
+/* ENEMY COUNTER */
+
+#enemyCounter {
+    position: absolute;
+
+    top: 15px;
+    right: 15px;
+
+    padding: 10px 15px;
+
+    background: rgba(0,0,0,.75);
+
+    border: 2px solid #333;
+
+    font-size: 13px;
+}
+
+
+/* =========================
+   SKILLS
+========================= */
+
+#skills {
+    position: absolute;
+
+    bottom: 38px;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    display: flex;
+
+    gap: 8px;
+}
+
+.skill {
+    position: relative;
+
+    width: 90px;
+    height: 75px;
+
+    background: #181818;
+
+    border: 2px solid #555;
+
+    border-radius: 6px;
+
+    text-align: center;
+
+    padding-top: 5px;
+
+    overflow: hidden;
+}
+
+.skill.ultimate {
+    border-color: #d8a52b;
+}
+
+.key {
+    font-size: 22px;
+
+    font-weight: bold;
+}
+
+.skillName {
+    font-size: 9px;
+
+    margin-top: 3px;
+}
+
+.cost {
+    font-size: 8px;
+
+    color: #6da7ff;
+
+    margin-top: 4px;
+}
+
+.cooldown {
+    position: absolute;
+
+    inset: 0;
+
+    background: rgba(0,0,0,.65);
+
+    display: none;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 18px;
+
+    font-weight: bold;
+}
+
+
+/* CONTROLS */
+
+#controls {
+    position: absolute;
+
+    bottom: 10px;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    font-size: 10px;
+
+    color: #aaa;
+
+    white-space: nowrap;
+}
+
+
+/* =========================
+   INVENTORY
+========================= */
+
+#inventory {
+    position: absolute;
+
+    inset: 0;
+
+    background: rgba(0,0,0,.7);
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    z-index: 20;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.inventoryBox {
+    position: relative;
+
+    width: 400px;
+
+    min-height: 300px;
+
+    padding: 30px;
+
+    background: #151515;
+
+    border: 3px solid #555;
+
+    text-align: center;
+}
+
+.inventoryBox h1 {
+    margin-top: 0;
+}
+
+#closeInventory {
+    position: absolute;
+
+    right: 10px;
+    top: 10px;
+
+    background: #a52b2b;
+
+    color: white;
+
+    border: none;
+
+    padding: 5px 9px;
+
+    cursor: pointer;
+}
+
+.inventorySlot {
+    display: inline-block;
+
+    width: 100px;
+    height: 120px;
+
+    margin: 10px;
+
+    padding: 15px;
+
+    background: #222;
+
+    border: 2px solid #444;
+
+    font-size: 20px;
+}
+
+
+/* =========================
+   START SCREEN
+========================= */
+
+#startScreen {
+    position: absolute;
+
+    inset: 0;
+
+    background: #080808;
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    z-index: 30;
+}
+
+.startBox {
+    text-align: center;
+
+    padding: 40px;
+}
+
+.startBox h1 {
+    font-size: 55px;
+
+    letter-spacing: 8px;
+
+    margin: 0;
+}
+
+.startBox h2 {
+    color: #aaa;
+
+    letter-spacing: 4px;
+}
+
+.startBox p {
+    color: #aaa;
+
+    margin: 25px;
+}
+
+#startButton {
+    padding: 13px 30px;
+
+    background: #c52e36;
+
+    color: white;
+
+    border: none;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+#startButton:hover {
+    background: #e23a43;
+}
