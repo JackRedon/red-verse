@@ -1236,7 +1236,7 @@ footer .copyright {
 
 	background: rgba(0, 0, 0, 0.8);
 
-	justify0content: center;
+	justify-content: center;
 	align-items: center;
 }
 
@@ -1245,7 +1245,7 @@ footer .copyright {
 
 	width: 80%;
 	max-width: 800px;
-	max-height; 80vh;
+	max-height: 80vh;
 
 	padding: 40px;
 		
@@ -1631,7 +1631,7 @@ footer .copyright {
 
 html {
 	scrollbar-width: auto;
-	scrollbar-color: #ffffff #111111;
+	scrollbar-color: white;
 }
 
 /* Chrome, Edge, Safari */
@@ -1644,7 +1644,7 @@ html {
 	background: #111111;
 }
 
-::webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
 	background: white;
 	border: 2px solid #111111;
 	border-radius: 10px;
@@ -1658,21 +1658,6 @@ html {
 
 * {
     box-sizing: border-box;
-}
-
-body {
-    margin: 0;
-    background: #080808;
-    color: white;
-    font-family: Arial, sans-serif;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    height: 100vh;
-
-    overflow: hidden;
 }
 
 #game {
