@@ -24,19 +24,26 @@
         <div class="logo">
             RED VERSE
         </div>
-
+ 
         <nav>
-            <a href="index.html">HOME</a>
+            <a href="index.html#home">HOME</a>
             <a href="index.html#characters">CHARACTERS</a>
             <a href="index.html#worlds">WORLDS</a>
-            <a href="stories.html">STORIES</a>
             <a href="index.html#lore">LORE</a>
+            <a href="index.html#map">MAP</a>
         </nav>
 
-        <button class="menu-button" onclick="toggleMenu()">?</button>
+        <button class="menu-button" 
+onclick="toggleExtraMenu()" aria-label="Open menu">
+		≡
+	</button>
+
+	<div class="extra-menu" id="extraMenu">
+		<a href="rules.html">ABOUT RED VERSE</a>
+
+</div>
 
     </header>
-
 
     <!-- STORIES -->
 
@@ -284,7 +291,7 @@
         </p>
 
         <p class="copyright">
-            � 2026 Red Verse
+            © 2026 Red Verse
         </p>
 
     </footer>
