@@ -22,13 +22,7 @@ const characters = {
             "Teleportation"
         ],
 
-        relationships: [
-            {
-                name: "Justin Redon",
-                type: "Brother"
-            }
-
-        ],
+        relationships: [], 
 
         alternateVersions: [],
 
@@ -60,10 +54,10 @@ const characters = {
         origin: "Vision, Olympicus",
 
         description:
-            "Description to be added.",
+            "Once regarded as the boy who'll progress to the world, now James Goldsman stands within the border of changing the past and the future.",
 
         abilities: [
-            "Abilities to be added"
+            "Light Magic"
         ],
 
         relationships: [],
@@ -150,7 +144,7 @@ const characters = {
     mack: {
 
         title: "THE TRAGIC BLADE",
-        name: "MAC WHITLOCK",
+        name: "ALEXANDER MACKLEMORE WHITLOCK",
         alias: "MAC",
 
         universe: "Olympicus Universe",
@@ -540,9 +534,7 @@ function searchCharacters() {
 
 }
 	
-/* =========================
-   CLICK OUTSIDE MODAL
-========================= */
+/* CLICK OUTSIDE MODAL */
 
 document
     .getElementById("characterModal")
@@ -558,9 +550,7 @@ document
 
 
 
-/* =========================
-   ESCAPE KEY
-========================= */
+/* ESCAPE KEY */
 
 document.addEventListener("keydown", function(event) {
 
@@ -574,9 +564,7 @@ document.addEventListener("keydown", function(event) {
 
 
 
-/* =========================
-   LORE BUTTON
-========================= */
+/* LORE BUTTON */
 
 function showLoreMessage() {
 
@@ -588,10 +576,7 @@ function showLoreMessage() {
 
 
 
-/* =========================
-   MAP BUTTON
-========================= */
-
+/* MAP BUTTON */
 function openMap() {
 
     alert(
@@ -602,9 +587,7 @@ function openMap() {
 
 
 
-/* =========================
-   MOBILE MENU
-========================= */
+/* MOBILE MENU */
 
 function toggleMenu() {
 
@@ -636,9 +619,7 @@ function toggleMenu() {
 
 }
 
-/* =========================
-   STORY SORTING
-========================= */
+/* STORY SORTING */
 
 function sortStories(type, button) {
 
@@ -721,3 +702,39 @@ function sortStories(type, button) {
     button.classList.add("active");
 
 }
+
+/* EXTRA HAMBURGER MENU */
+
+function toggleExtraMenu() {
+
+	const menu =
+
+document.getElementById("extraMenu");
+
+	menu.classList.toggle("active")
+
+}
+
+document.addEventListener("click",function(event) {
+
+	const menu =
+
+document.getElementById("extraMenu");
+
+	const button =
+
+document.querySelector(".menu-button");
+
+	if (
+		menu &&
+		!menu.contains(event.target)
+&&
+		!
+button.contains(event.target)
+	) {
+
+menu.classList.remove("active");
+
+		}
+});
+
