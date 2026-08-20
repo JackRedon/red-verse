@@ -1,124 +1,177 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html> 
+<html lang="en"> 
 
-<head>
+<head> 
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="UTF-8"> 
+	<meta name="viewport" 
 
-    <title>The Engineer � Red Verse</title>
+content="width=device-width, initial-scale=1.0"> 
 
-    <link rel="stylesheet" href="style.css">
+	<title>James Goldsman — Red Verse</title> 
 
-</head>
+	<link rel="stylesheet" href="style.css"> 
 
+</head> 
 
-<body>
+<body> 
 
-    <!-- NAVIGATION -->
+	<!-- NAVIGATION --> 
 
-    <header class="navbar">
+<header class="navbar"> 
 
-        <div class="logo">
-            RED VERSE
-        </div>
+<div class="logo"> 
+	RED VERSE 
+</div> 
 
-        <nav>
-            <a href="index.html">HOME</a>
+	<nav>
+            <a href="index.html#home">HOME</a>
             <a href="index.html#characters">CHARACTERS</a>
             <a href="index.html#worlds">WORLDS</a>
             <a href="index.html#lore">LORE</a>
             <a href="index.html#map">MAP</a>
         </nav>
 
-        <button class="menu-button" onclick="toggleMenu()">?</button>
+        <button class="menu-button" 
+onclick="toggleExtraMenu()" aria-label="Open menu">
+		≡
+	</button>
 
-    </header>
+	<div class="extra-menu" id="extraMenu">
+		<a href="rules.html">ABOUT RED VERSE</a>
+
+</header> 
+
+<!-- STORY CHARACTER RAIL -->
+
+<aside class="story-character-rail">
+
+	<div class="rail-title">
+		CHARACTERS IN THIS STORY
+	</div>
+
+	<button class="story-character active"
+onclick="opencharacterCard()">
+
+	<div class="class-icon">
+		JG
+	</div>
+
+	<span class="character-name">
+		JAMES GOLDSMAN
+	</span>
+
+	</button>
+
+</aside>	
+
+<!-- STORY --> 
+
+<main class="story-page">
+
+<div class="story-header"> 
+
+	<p class="eyebrow"> 
+		RED VERSE - STORIES 
+	</p> 
+
+	<h1> 
+		THE STORY OF THE TECH BOY 
+	</h1> 
+
+	<p class="story-subtitle"> 
+<i> 
+	"There is no line between technology and magic." 
+</i></p> 
+
+<div class="story-author"> 
+
+	<span>WRITTEN BY</span> 
+
+<strong> 
+	Juan Antonio Mallari</strong> 
+
+	</div> 
+	
+</div> 
+
+<div class="story-divider"></div> 
+
+<!-- STORY CONTENT --> 
+
+<article class="story-content"> 
+
+	<p> In a time of limited progression and slow advancements, in kingdoms built on ruins, when mortals and gods roamed alike; an era of arcane crafts and surges of mystical—known and unknown magic—the Goldsmans were the figures that broke the boundaries of possibilities. </p>
+
+<p> James Goldsman—sole son of Thaddeus—born not from wealth or power, but from the diligence that built the legacy of their name. But as time has it for the people of Olympicus, sorrow comes at a cost; it's only if they live long enough to pay the price. For James, that couldn't be farther from reality. </p>
+
+<p> Even as a child, James always sought to reach limitless potential. Born and raised in the heart of Vision, the city of Planation; the Progress Capital, the city of the future, the home to the brightest of the bright. He was regarded to be one of the next steps towards achieving the perfect future; a future that he believed was his destiny. A future where magic and technology aligned— man that would bring about the glorious reformation. </p>
+
+<p> In the Library of the Great A.V., the slender boy James lay all day, every day, learning of ancient and forgotten information, in the pursuit of one day uncovering truths beyond the comprehension of mankind. Quite the genius, as people perceived him. But amidst the hall—filled books and knowledge, he found the one thing that knowledge couldn't bring; a friend. James met another boy—similar to him—another genius. As they formed a bond, their lives began to change; a change that would go on to shape their lives. His name was Daraxi. </p>
+
+<p> As the days flew by and as they turned from boys to men, the two grew closer and closer—almost inseparable it seemed. Though their goal was to change the world, occasionally, they had their fun—like brothers. </p>
+
+<p> Each year within the confines of the capital, where major progression happens, the most prominent affair takes place—the most awaited gathering that brings together those with the highest influence, power, status, and rank to embrace their society's greatest innovations. One of the influential few that partakes in these events are the Goldsmans. Being symbols of novelty and advancements—the ones that revolutionized what modern society is, and what technology can be. </p>
+
+<p> As more figures began to arrive, James is pulled away by Daraxi. Not far from the capital, the ruins of an old castle lay. There, they sit around talking about life; their lives. Sharing each other’s vulnerabilities—each other’s success. Yet despite having the same goal—to reach the change the world deserves—they differ in execution. Nonetheless, they truly believed they shared the same life—a life created to fulfill one task: Change the world. Time continues to pass, the day keeps on going by. Without a hint of responsibility, for the first time in years, they finally feel free to do anything; not to follow rules, not to be what they're expected to be, but to live as brothers. </p>
+
+<p> Daraxi looks James in the eye. From his pockets, he grabs what can only be described as a luminous stone—glowing violently—like the cascading stars that gleam in the distant skies. According to Daraxi’s story, the stone is a  crystallized tear of a God. James shrugs it off as nothing more than stories parents told their children at night. </p>
+
+<p> Back to the Capital they go. Along with them, they hide the stone within a pouch made from the Hyde of a bear, to exhibit to those that await back in the city. Without even a moment to breathe, they're swarmed by hundreds of heralds within the gates of the Capital. From within the crowd, they're pulled by Thaddeus—his fury evident from the soul-taking glances and movement he expresses. A surge of light flashes outwards from the pouch that hid the glowing stone, catching the already outraged Thaddeus’ attention. They show him the stone, failing to notice the unobtrusively large cracks starting to form. </p>
+
+<p> The stone’s energy could be felt all around. Thaddeus staggered away in fear. For since the dawn of Capital’s reign, no magic had ever laid within its confines. James, standing, gripping the stone with his bare hands, flanked by his father and friend, stood before the forming crowd. At this moment, Thaddeus ordered them to discard and erase the stone from the city’s borders. Despite being the zenith that brought the rise of innovation, Thaddeus truly despised the idea of magic and technology ever being one. To him, it was a sin, an abomination that would ruin technology and progress. </p>
+
+<p> But whether that idea was of reality, preconception or fiction, James had deemed the former. He believed—he knew—that whatever magic or craft the stone carried, it, without a doubt, had the potential to truly revolutionize technology. In spite of handing James the stone, Daraxi did what he could to convince James to reconsider. But as they continue bickering, and as the crowd begins to grow in large amounts, the tension becomes increasingly tense. </p>
+
+<p> As the cracks on the stone spread and crept, the light grows  unstable and volatile; huge surges of blindening light flash in all directions. Still, James remained defiant. But without knowledge of what the stone could do, he is engulfed by the stone’s light—filling James with power, and he screams in tremble as his body begins to shine. Behind him, Daraxi attempts to pull him away, yet the overwhelming light makes it unbearable. </p>
+
+<p> With the combined force of Thaddeus and Daraxi, they yank the stone away from James. Nevertheless, the stone's absurd power still continued to flow through the atmosphere; where it could be felt by everyone around. Within the cascading energy, a huge wave of power and light blasts everyone in the vicinity, destroying the capital and laying waste to the city. All that remained were the bodies that were caught within the blast. Thaddeus, reduced to ashes; whilst Daraxi became nothing more than a shell of his former self. Only James survived; for he managed to channel and draw power from this stone, shielding him from the explosion. Still, he wasn't left unscathed, sustaining a scar on his forehead. </p>
+
+<p> In the midst of all the destruction and death, James, with the overwhelming guilt behind his shoulder, stands above everything. To the world, he was the genius boy that would change the world; but to the world he lived in, he became the man that shattered everything. As day turned to night, and as night turned to day, the sorrow that filled James’ heart started to show—his pain, blinding like the light that killed and ruined his once beloved home. And he himself blames no one but him. </p>
+
+<p> Years pass. The power that lies within James changes him. The body that he had long so desperately despised no longer aged; leaving him practically immortal, while the world around him changes with each passing generation, fulfilling the duties that he himself was unable to accomplish. The once tech boy that strived to be the greatest, became nothing but a story of distraught, untouched by passage of time, reminding him of his greatest and tragic lesson. </p>
 
 
-    <!-- STORY -->
 
-    <main class="story-page">
+<p> He endured his loneliness. Lost in a game of time. Until, one day, he is greeted by an unsuspecting visitor. A tall, pale, slender, well-dressed woman. Whose hair was as red as the burning ruins of Planation. James did not know her, but she knew him. As they sat across from each other, he couldn't help but feel a sense of humanity. A feeling he hadn't felt in a long time. </p>
 
-        <div class="story-header">
+<p> Neither talk. But the echoes of their silence was as deafening as thunder. A card. She hands it to him. It was a calling—an invitation to be a part of something new. Though deep inside lies an apprehension. From a life of purpose and glory—he's become nothing more than a fragment of what their society could have been. Hundreds of years without a reason. Now, infront of him was the chance he so desperately desired. For this is what he always believed in: to protect and change the world. Not a single word, not a single sudden move. </p>
 
-            <p class="eyebrow">
-                RED VERSE - STORIES
-            </p>
+<p> Looking at the card, all he could see was of that night. The night he became, what he considered himself to be, a monster; to himself, to the future, to his family and friends, and to society. However, now he had the chance to make up for it. The opportunity to finally right the wrongs. This was the birth of a new age. The age of knowledge and power, technology and magic, the crossroad of past history and the future. This was the rebirth of James Goldsman. </p>
+<p>"Let's change the world."</p>
 
-            <h1>
-                THE STORY OF THE TECH BOY
-            </h1>
+</article> 
 
-            <p class="story-subtitle">
-<i>
-		"There is no line between technology and magic.
-"           
-	</i></p>
+<!-- BACK BUTTON --> 
 
-            
+<div class="story-footer"> 
 
-	<div class="story-author">
+<a href="stories.html" class="outline-button"> 
+	BACK TO STORY PAGE 
+	</a> 
 
-                
-		<span>WRITTEN BY</span>
+</div> 
 
-                
-		<strong>
-Juan Antonio Mallari</strong>
+</main> 
 
-            
+<!-- FOOTER --> 
 
-		</div>
+<footer> 
 
-        </div>
+<h2>RED VERSE</h2> 
 
-        <div class="story-divider"></div>
+	<p> 
+		The official Encyclopedia of The Red Verse. 
+	</p> 
 
+	<p 
+		class="copyright"> © 2026 Red Verse 
+	</p> 
 
-        <!-- STORY CONTENT -->
+</footer> 
 
-        <article class="story-content">
+<script src="script.js"></script> 
 
-            <p>
-                James Goldsman's story is currently being written.
-            </p>
-
-        </article>
-
-
-        <!-- BACK BUTTON -->
-
-        <div class="story-footer">
-
-            <a href="index.html#lore" class="outline-button">
-                BACK TO HOME PAGE
-            </a>
-
-        </div>
-
-    </main>
-
-
-    <!-- FOOTER -->
-
-    <footer>
-
-        <h2>RED VERSE</h2>
-
-        <p>
-            The official Encyclopedia of The Red Verse.
-        </p>
-
-        <p class="copyright">
-            � 2026 Red Verse
-        </p>
-
-    </footer>
-
-
-    <script src="script.js"></script>
-
-</body>
+</body> 
 
 </html>
