@@ -1,0 +1,495 @@
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100%;
+    background: #080808;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+
+/* =========================================================
+   MOBILE BLOCK
+========================================================= */
+
+#mobileBlocked {
+    display: none;
+	position: fixed;
+	inset: 0;
+background: #080808;
+	color: white;
+	z-index: 999999;
+
+align-items: center;
+justify-content: center;
+text-align: center;
+padding: 30px;
+}
+
+.mobileBlockedBox {
+	max-width: 350px;
+}
+
+.mobileBlockedBox h1 {
+	margin: 0 0 20px;
+	color: #d93636;
+	font-size: 40px;
+	letter-spacing: 5px;
+}
+
+.mobileBlockedBox p {
+	color: #aaa;
+	line-height: 1.6;
+}
+
+/* =========================================================
+   GAME
+========================================================= */
+
+#game {
+    position: relative;
+
+    width: 1000px;
+    height: 650px;
+
+    margin: 20px auto;
+
+    border: 3px solid #333;
+
+    background: #111;
+
+    overflow: hidden;
+}
+
+
+canvas {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    image-rendering: pixelated;
+}
+
+
+/* =========================================================
+   HUD
+========================================================= */
+
+#hud {
+    position: absolute;
+
+    inset: 0;
+
+    pointer-events: none;
+
+	z-index: 10;
+}
+
+
+/* =========================================================
+   PLAYER INFO
+========================================================= */
+
+#playerInfo {
+    position: absolute;
+
+    top: 15px;
+    left: 15px;
+
+    width: 260px;
+
+    padding: 12px;
+
+    background: rgba(0, 0, 0, .75);
+
+    border: 2px solid #333;
+
+    border-radius: 6px;
+}
+
+.playerName {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.stat {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+    margin-bottom: 5px;
+
+    font-size: 10px;
+}
+
+.stat > span:first-child {
+    width: 45px;
+}
+
+.bar {
+    flex: 1;
+
+    height: 10px;
+
+    background: #222;
+
+    border: 1px solid #111;
+}
+
+.bar div {
+    height: 100%;
+    width: 100%;
+}
+
+.hp {
+    background: #d93636;
+}
+
+.mana {
+    background: #3d7cff;
+}
+
+.hunger {
+    background: #e3a52d;
+}
+
+.energy {
+    background: #55c76f;
+}
+
+.level {
+    margin-top: 8px;
+
+    font-size: 11px;
+
+    color: #ccc;
+}
+
+
+/* =========================================================
+   ENEMY COUNTER
+========================================================= */
+
+#enemyCounter {
+    position: absolute;
+
+    top: 15px;
+    right: 15px;
+
+    padding: 10px 15px;
+
+    background: rgba(0, 0, 0, .75);
+
+    border: 2px solid #333;
+
+    border-radius: 5px;
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   SKILLS
+========================================================= */
+
+#skills {
+    position: absolute;
+
+    bottom: 38px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    display: flex;
+
+    gap: 8px;
+}
+
+.skill {
+    position: relative;
+
+    width: 90px;
+    height: 75px;
+
+    background: #181818;
+
+    border: 2px solid #555;
+
+    border-radius: 6px;
+
+    text-align: center;
+
+    padding-top: 5px;
+
+    overflow: hidden;
+
+    pointer-events: auto;
+
+    cursor: pointer;
+}
+
+.skill:hover {
+    background: #252525;
+    border-color: #aaa;
+}
+
+.skill.ultimate {
+    border-color: #d8a52b;
+}
+
+.key {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.skillName {
+    font-size: 9px;
+    margin-top: 3px;
+}
+
+.cost {
+    font-size: 8px;
+
+    color: #6da7ff;
+
+    margin-top: 4px;
+}
+
+.cooldown {
+    position: absolute;
+
+    inset: 0;
+
+    background: rgba(0, 0, 0, .65);
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: 18px;
+
+    font-weight: bold;
+}
+
+
+/* =========================================================
+   CONTROLS
+========================================================= */
+
+#controls {
+    position: absolute;
+
+    bottom: 10px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    font-size: 10px;
+
+    color: #aaa;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   START SCREEN
+========================================================= */
+
+#startScreen {
+    position: absolute;
+	inset: 0;
+
+    background: #080808;
+
+    display: flex; !important;
+
+    justify-content: center;
+    align-items: center;
+
+    z-index: 100;
+}
+
+.startBox {
+    text-align: center;
+
+    padding: 40px;
+}
+
+.startBox h1 {
+    font-size: 55px;
+
+    letter-spacing: 8px;
+
+    margin: 0;
+}
+
+.startBox h2 {
+    color: #aaa;
+
+    letter-spacing: 4px;
+}
+
+.startBox p {
+    color: #aaa;
+
+    margin: 25px;
+}
+
+#startButton {
+    display: inline-block; !important;
+
+    padding: 13px 30px;
+
+    background: #c52e36;
+
+    color: white;
+
+    border: none;
+
+    font-weight: bold;
+
+    font-size: 14px;
+
+    cursor: pointer;
+}
+
+#startButton:hover {
+    background: #e23a43;
+}
+
+
+/* =========================================================
+   RESTART
+========================================================= */
+
+#restartButton {
+    position: absolute;
+
+    top: 15px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    padding: 8px 15px;
+
+    background: #a52b2b;
+
+    color: white;
+
+    border: 1px solid #d94a4a;
+
+    border-radius: 4px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    display: none;
+
+    z-index: 50;
+}
+
+#restartButton:hover {
+    background: #d93636;
+}
+
+/* PAUSE MENU ON TOP */
+#pauseOverlay {
+	position: absolute;
+	inset: 0;
+	z-index: 9999;
+}
+
+/* =========================================================
+   PAUSE OVERLAY
+========================================================= */
+
+#pauseOverlay {
+    position: absolute;
+    inset: 0;
+
+    background: rgba(0, 0, 0, 0.55);
+
+    backdrop-filter: blur(7px);
+    -webkit-backdrop-filter: blur(7px);
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    z-index: 999999;
+
+    pointer-events: auto;
+}
+
+#pauseOverlay.hidden {
+    display: none !important;
+}
+
+.pauseBox {
+    width: 500px;
+    max-height: 90%;
+
+    overflow-y: auto;
+
+    padding: 25px 35px;
+
+    background: rgba(10, 10, 10, 0.94);
+
+    border: 2px solid #555;
+
+    text-align: center;
+
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+}
+
+.pauseBox h1 {
+    margin: 0 0 20px;
+
+    font-size: 42px;
+
+    letter-spacing: 5px;
+}
+
+.pauseSection {
+    margin-bottom: 18px;
+}
+
+.pauseSection h2 {
+    margin: 8px 0 10px;
+
+    color: #d93636;
+
+    font-size: 18px;
+
+    letter-spacing: 2px;
+}
+
+.pauseSection p {
+    margin: 4px 0;
+
+    color: #ddd;
+
+    font-size: 13px;
+}
+
+.resumeText {
+    margin-top: 20px;
+
+    color: #aaa;
+
+    font-size: 12px;
+
+    font-weight: bold;
+}
