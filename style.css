@@ -1634,8 +1634,10 @@ footer .copyright {
 /* RED VERSE GLOBAL SCROLLBAR */
 
 html {
+	overflow-y: scroll !important;
+	overflow-x: hidden;
 	scrollbar-width: auto;
-	scrollbar-color: white;
+	scrollbar-color: white #111111;
 }
 
 /* Chrome, Edge, Safari */
@@ -1652,16 +1654,11 @@ html {
 	background: white;
 	border: 2px solid #111111;
 	border-radius: 10px;
+
 }
 
 ::-webkit-scrollbar-thumb:hover {
 	background: #d00000;
-}
-
-/* GAME */
-
-* {
-    box-sizing: border-box;
 }
 
 /* =========================================================
@@ -1683,8 +1680,6 @@ body {
     background: #080808;
 
     overflow: hidden;
-
-    touch-action: none;
 
     font-family:
         Arial,
@@ -2988,7 +2983,7 @@ body::before {
     transform: translateX(4px);
 }
 
-@media (max-width: 900px0 {
+@media (max-width: 900px) {
 	.navbar nav.active {
 		display: flex;
 		flex-direction: column;
