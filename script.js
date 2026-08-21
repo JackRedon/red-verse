@@ -695,8 +695,11 @@ function toggleExtraMenu() {
 	const menu =
 
 document.getElementById("extraMenu");
+	const nav =
+document.querySelector(".navbar nav");
 
-	menu.classList.toggle("active")
+	menu.classList.toggle("active");
+	nav.classList.toggle("active");
 
 }
 
@@ -722,4 +725,3 @@ menu.classList.remove("active");
 
 		}
 });
-
