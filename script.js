@@ -14,9 +14,6 @@ const characters = {
         status: "Active",
         origin: "Earth",
 
-        description:
-            "Description to be added.",
-
         abilities: [
             "Pyrokinesis",
             "Teleportation"
@@ -53,9 +50,6 @@ const characters = {
         status: "Active",
         origin: "Vision, Olympicus",
 
-        description:
-            "Once regarded as the boy who'll progress to the world, now James Goldsman stands within the border of changing the past and the future.",
-
         abilities: [
             "Light Magic"
         ],
@@ -84,9 +78,6 @@ const characters = {
         universe: "Olympicus Universe",
         status: "Unknown",
         origin: "Vision, Olympicus",
-
-        description:
-            "Descriptiion to be added.",
 
         abilities: [
             "Abilities to be added"
@@ -118,9 +109,6 @@ const characters = {
         status: "Active",
         origin: "Sevvera, Olympicus",
 
-        description:
-            "Description to be added.",
-
         abilities: [
             "Abilities to be added"
         ],
@@ -150,9 +138,6 @@ const characters = {
         universe: "Olympicus Universe",
         status: "Active",
         origin: "Balik-Tanaw, Olympicus",
-
-        description:
-            "Description to be added.",
 
         abilities: [
 		"Abilities to be added"
