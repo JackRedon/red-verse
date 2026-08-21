@@ -1,0 +1,424 @@
+/* =========================
+   RED VERSE — 404 PAGE
+========================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #080808;
+    color: white;
+}
+
+
+/* =========================
+   MAIN 404 PAGE
+========================= */
+
+.error-page {
+    position: fixed;
+
+    inset: 0;
+
+    width: 100vw;
+    height: 100vh;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+
+    overflow: hidden;
+
+    background:
+        radial-gradient(
+            circle at 50% 50%,
+            rgba(180, 0, 0, 0.25),
+            transparent 40%
+        ),
+        linear-gradient(
+            145deg,
+            #050505,
+            #100000
+        );
+}
+
+
+/* =========================
+   GRAIN
+========================= */
+
+.error-page::before {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    z-index: 1;
+
+    opacity: 0.028;
+
+    background-image:
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.8'/%3E%3C/svg%3E");
+
+    background-repeat: repeat;
+}
+
+
+/* =========================
+   RED GLOW
+========================= */
+
+.error-page::after {
+    content: "";
+
+    position: absolute;
+
+    width: 700px;
+    height: 700px;
+
+    left: 50%;
+    top: 50%;
+
+    transform: translate(-50%, -50%);
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(180, 0, 0, 0.12),
+            transparent 65%
+        );
+
+    pointer-events: none;
+}
+
+
+/* =========================
+   CONTENT
+========================= */
+
+.error-container {
+    position: relative;
+
+    z-index: 5;
+
+    width: min(900px, 90vw);
+
+    margin: 0 auto;
+
+    padding: 40px 20px;
+
+    text-align: center;
+}
+
+
+/* =========================
+   LOGO
+========================= */
+
+.error-logo {
+    color: #e00000;
+
+    font-size: 24px;
+
+    font-weight: 900;
+
+    letter-spacing: 5px;
+
+    margin-bottom: 30px;
+
+    text-shadow:
+        0 0 15px rgba(224, 0, 0, 0.3);
+}
+
+
+/* =========================
+   DIVIDER
+========================= */
+
+.error-divider {
+    width: 120px;
+
+    height: 1px;
+
+    margin: 0 auto 40px;
+
+    background: #d00000;
+
+    box-shadow:
+        0 0 12px rgba(208, 0, 0, 0.6);
+}
+
+
+/* =========================
+   404
+========================= */
+
+.error-number {
+    margin: 0;
+
+    font-size: clamp(130px, 23vw, 260px);
+
+    line-height: 0.75;
+
+    font-weight: 1000;
+
+    letter-spacing: -12px;
+
+    color: white;
+
+    text-shadow:
+        0 0 30px rgba(255, 0, 0, 0.18);
+}
+
+
+/* =========================
+   TITLE
+========================= */
+
+.error-title {
+    margin-top: 55px;
+
+    color: #d00000;
+
+    font-size: clamp(20px, 4vw, 32px);
+
+    font-weight: 900;
+
+    letter-spacing: 5px;
+}
+
+
+/* =========================
+   DESCRIPTION
+========================= */
+
+.error-description {
+    max-width: 600px;
+
+    margin: 25px auto 0;
+
+    color: #999;
+
+    font-size: 16px;
+
+    line-height: 1.8;
+}
+
+
+/* =========================
+   BUTTON
+========================= */
+
+.error-button {
+    display: inline-block;
+
+    margin-top: 40px;
+
+    padding: 16px 28px;
+
+    background: #c80000;
+
+    color: white;
+
+    border: 1px solid #c80000;
+
+    text-decoration: none;
+
+    font-size: 12px;
+
+    font-weight: bold;
+
+    letter-spacing: 2px;
+
+    transition: 0.3s;
+}
+
+.error-button:hover {
+    background: #ff0000;
+
+    border-color: #ff0000;
+
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 8px 25px rgba(180, 0, 0, 0.3);
+}
+
+
+/* =========================
+   BOTTOM LINE
+========================= */
+
+.error-bottom-line {
+    width: 100%;
+
+    max-width: 500px;
+
+    height: 1px;
+
+    margin: 60px auto 0;
+
+    background: #292929;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+.error-footer {
+    margin-top: 25px;
+
+    color: #555;
+
+    font-size: 11px;
+
+    letter-spacing: 2px;
+}
+
+
+/* =========================
+   CORNERS
+========================= */
+
+.error-corner {
+    position: absolute;
+
+    width: 80px;
+    height: 80px;
+
+    border-color: rgba(208, 0, 0, 0.45);
+
+    border-style: solid;
+
+    z-index: 4;
+}
+
+.error-corner.top-left {
+    top: 35px;
+    left: 35px;
+
+    border-width: 1px 0 0 1px;
+}
+
+.error-corner.top-right {
+    top: 35px;
+    right: 35px;
+
+    border-width: 1px 1px 0 0;
+}
+
+.error-corner.bottom-left {
+    bottom: 35px;
+    left: 35px;
+
+    border-width: 0 0 1px 1px;
+}
+
+.error-corner.bottom-right {
+    bottom: 35px;
+    right: 35px;
+
+    border-width: 0 1px 1px 0;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+    .error-container {
+        width: 95vw;
+
+        padding: 20px 10px;
+    }
+
+    .error-logo {
+        font-size: 16px;
+
+        letter-spacing: 4px;
+
+        margin-bottom: 25px;
+    }
+
+    .error-divider {
+        width: 90px;
+
+        margin-bottom: 35px;
+    }
+
+    .error-number {
+        font-size: 125px;
+
+        letter-spacing: -7px;
+    }
+
+    .error-title {
+        margin-top: 45px;
+
+        font-size: 18px;
+
+        letter-spacing: 3px;
+    }
+
+    .error-description {
+        font-size: 14px;
+
+        padding: 0 10px;
+    }
+
+    .error-button {
+        padding: 14px 22px;
+
+        font-size: 11px;
+    }
+
+    .error-bottom-line {
+        margin-top: 50px;
+    }
+
+    .error-corner {
+        width: 45px;
+        height: 45px;
+    }
+
+    .error-corner.top-left {
+        top: 20px;
+        left: 20px;
+    }
+
+    .error-corner.top-right {
+        top: 20px;
+        right: 20px;
+    }
+
+    .error-corner.bottom-left {
+        bottom: 20px;
+        left: 20px;
+    }
+
+    .error-corner.bottom-right {
+        bottom: 20px;
+        right: 20px;
+    }
+}
