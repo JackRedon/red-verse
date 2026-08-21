@@ -1320,7 +1320,7 @@ footer .copyright {
 .extra-menu {
     position: absolute;
 
-    top: 75px;
+    top: 60px;
     right: 5%;
 
     width: 240px;
@@ -1774,12 +1774,12 @@ body::before {
 
 	width: 240px;
 	padding: 0;
-	background: #080808;
+	background: #050505;
 	border: 1px solid #333;
 	box-shadow: 0 15p 40px
 rgba(0, 0, 0, 0.6);
 	
-		z-index: 2000;
+		z-index: 2001;
 	}
 
 	.navbar nav.active a {
@@ -1795,14 +1795,19 @@ rgba(0, 0, 0, 0.6);
 
 	}
 
-	.navbar nav.active a:hover {
-	background: #111;
-	color: #d00000;
+/* ABOUT RED VERSE BOX */
+
+	.extra-menu {
+	top: 75px;
+	right: 5%;
+	width: 240px;
+	z-index: 2000;
+
 	}
 }
 
 .menu-button {
 	position: relative;
-	z-index: 3000;
-
+	z-index: 1002;
+	}
 }
