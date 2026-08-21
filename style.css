@@ -1333,7 +1333,7 @@ footer .copyright {
 
     display: none;
 
-    z-index: 1500;
+    z-index: 900;
 }
 
 
@@ -2141,4 +2141,18 @@ body::before {
     color: white;
 
     transform: translateX(4px);
+}
+
+@media (max-width: 900px0 {
+	.navbar nav.active {
+		display: flex;
+		flex-direction: column;
+		gap: 20px;
+	}
+}
+
+.menu-button {
+	position: relative;
+	z-index: 3000;
+
 }
