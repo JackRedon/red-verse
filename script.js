@@ -725,3 +725,13 @@ menu.classList.remove("active");
 
 		}
 });
+
+function characterInProgress(event) {
+	event.stopPropagation();
+	alert("The Character is currently in progress and will be available soon.");
+}
+
+function storyInProgress(event) {
+	event.stopPropagation();
+	alert("The Story is currently in progress and will be available to read soon.");
+}
