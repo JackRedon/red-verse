@@ -1766,7 +1766,38 @@ body::before {
 	.navbar nav.active {
 		display: flex;
 		flex-direction: column;
-		gap: 20px;
+		gap: 0;
+
+	postion: absolute;
+	top: 75px;
+	right: 5%;
+
+	width: 240px;
+	padding: 0;
+	background: #080808;
+	border: 1px solid #333;
+	box-shadow: 0 15p 40px
+rgba(0, 0, 0, 0.6);
+	
+		z-index: 2000;
+	}
+
+	.navbar nav.active a {
+		display: block;
+	width: 100%;
+	padding: 18px 22px;
+	color: #ccc;
+	border-bottom: 1px solid #222;
+	}
+
+	.navbar nac.active a:last-child {
+		border-bottom: none;
+
+	}
+
+	.navbar nav.active a:hover {
+	background: #111;
+	color: #d00000;
 	}
 }
 
