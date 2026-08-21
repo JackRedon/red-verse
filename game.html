@@ -1,0 +1,482 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width,
+                   initial-scale=1.0,
+                   maximum-scale=1.0,
+                   user-scalable=no">
+
+    <title>RedVerse Alpha 1</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+
+<body>
+
+<div id="game">
+
+    <canvas id="gameCanvas"
+            width="1000"
+            height="650">
+    </canvas>
+
+
+    <!-- =========================
+         HUD
+    ========================== -->
+
+    <div id="hud">
+
+
+        <!-- PLAYER INFO -->
+
+        <div id="playerInfo">
+
+            <div class="playerName">
+                PLAYER
+            </div>
+
+
+            <div class="stat">
+
+                <span>HP</span>
+
+                <div class="bar">
+                    <div id="hpBar"
+                         class="hp">
+                    </div>
+                </div>
+
+                <span id="hpText">
+                    100 / 100
+                </span>
+
+            </div>
+
+
+            <div class="stat">
+
+                <span>MANA</span>
+
+                <div class="bar">
+                    <div id="manaBar"
+                         class="mana">
+                    </div>
+                </div>
+
+                <span id="manaText">
+                    100 / 100
+                </span>
+
+            </div>
+
+
+            <div class="stat">
+
+                <span>HUNGER</span>
+
+                <div class="bar">
+                    <div id="hungerBar"
+                         class="hunger">
+                    </div>
+                </div>
+
+                <span id="hungerText">
+                    100 / 100
+                </span>
+
+            </div>
+
+
+            <div class="stat">
+
+                <span>ENERGY</span>
+
+                <div class="bar">
+                    <div id="energyBar"
+                         class="energy">
+                    </div>
+                </div>
+
+                <span id="energyText">
+                    100 / 100
+                </span>
+
+            </div>
+
+
+            <div class="level">
+
+                LEVEL
+                <span id="levelText">1</span>
+
+                &nbsp; XP:
+
+                <span id="xpText">
+                    0 / 100
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- KILL COUNTER -->
+
+        <div id="enemyCounter">
+
+            KILLS:
+            <span id="enemyCount">
+                0
+            </span>
+
+        </div>
+
+
+        <!-- =========================
+             DESKTOP SKILLS
+        ========================== -->
+
+        <div id="skills">
+
+            <div class="skill"
+                 id="skillQ">
+
+                <div class="key">
+                    Q
+                </div>
+
+                <div class="skillName">
+                    LIGHT FLOW
+                </div>
+
+                <div class="cost">
+                    <span id="qMana">15</span>
+                    MANA
+                </div>
+
+                <div class="cooldown"
+                     id="qCooldown">
+                </div>
+
+            </div>
+
+
+            <div class="skill"
+                 id="skillE">
+
+                <div class="key">
+                    E
+                </div>
+
+                <div class="skillName">
+                    LIGHT STRIKE
+                </div>
+
+                <div class="cost">
+                    <span id="eMana">20</span>
+                    MANA
+                </div>
+
+                <div class="cooldown"
+                     id="eCooldown">
+                </div>
+
+            </div>
+
+
+            <div class="skill"
+                 id="skillR">
+
+                <div class="key">
+                    R
+                </div>
+
+                <div class="skillName">
+                    SHOCK
+                </div>
+
+                <div class="cost">
+                    <span id="rMana">40</span>
+                    MANA
+                </div>
+
+                <div class="cooldown"
+                     id="rCooldown">
+                </div>
+
+            </div>
+
+
+            <div class="skill ultimate"
+                 id="skillT">
+
+                <div class="key">
+                    T
+                </div>
+
+                <div class="skillName">
+                    FLASH
+                </div>
+
+                <div class="cost">
+                    <span id="tMana">70</span>
+                    MANA
+                </div>
+
+                <div class="cooldown"
+                     id="tCooldown">
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- DESKTOP CONTROLS -->
+
+        <div id="controls">
+
+            WASD Move
+            &nbsp; | &nbsp;
+
+            SHIFT Sprint
+            &nbsp; | &nbsp;
+
+            LMB Attack
+            &nbsp; | &nbsp;
+
+            RMB Block
+            &nbsp; | &nbsp;
+
+            Q E R Skills
+            &nbsp; | &nbsp;
+
+            T Ultimate
+            &nbsp; | &nbsp;
+
+            SPACE Refill
+
+        </div>
+
+
+        <!-- =========================
+             MOBILE CONTROLS
+        ========================== -->
+
+        <div id="mobileControls">
+
+
+            <!-- LEFT SIDE -->
+
+            <div id="mobileLeftControls">
+
+
+                <!-- JOYSTICK -->
+
+                <div id="joystick">
+
+                    <div id="joystickKnob">
+                    </div>
+
+                </div>
+
+
+                <!-- SHIELD -->
+
+                <button id="mobileShield"
+                        class="mobileActionButton shieldButton">
+
+                    🛡
+
+                </button>
+
+            </div>
+
+
+            <!-- RIGHT SIDE -->
+
+            <div id="mobileRightControls">
+
+
+                <!-- SPRINT -->
+
+                <button id="mobileSprint"
+                        class="mobileActionButton sprintButton">
+
+                    <span class="buttonIcon">
+                        ⚡
+                    </span>
+
+                    <span>
+                        SPRINT
+                    </span>
+
+                </button>
+
+
+                <!-- SKILLS -->
+
+                <div id="mobileSkills">
+
+
+                    <button class="mobileSkill"
+                            id="mobileSkillQ">
+
+                        <span class="mobileSkillKey">
+                            Q
+                        </span>
+
+                        <span class="mobileSkillName">
+                            FLOW
+                        </span>
+
+                        <span class="mobileSkillCooldown"
+                              id="mobileQCooldown">
+                        </span>
+
+                    </button>
+
+
+                    <button class="mobileSkill"
+                            id="mobileSkillE">
+
+                        <span class="mobileSkillKey">
+                            E
+                        </span>
+
+                        <span class="mobileSkillName">
+                            STRIKE
+                        </span>
+
+                        <span class="mobileSkillCooldown"
+                              id="mobileECooldown">
+                        </span>
+
+                    </button>
+
+
+                    <button class="mobileSkill"
+                            id="mobileSkillR">
+
+                        <span class="mobileSkillKey">
+                            R
+                        </span>
+
+                        <span class="mobileSkillName">
+                            SHOCK
+                        </span>
+
+                        <span class="mobileSkillCooldown"
+                              id="mobileRCooldown">
+                        </span>
+
+                    </button>
+
+
+                    <button class="mobileSkill mobileUltimate"
+                            id="mobileSkillT">
+
+                        <span class="mobileSkillKey">
+                            T
+                        </span>
+
+                        <span class="mobileSkillName">
+                            FLASH
+                        </span>
+
+                        <span class="mobileSkillCooldown"
+                              id="mobileTCooldown">
+                        </span>
+
+                    </button>
+
+                </div>
+
+
+                <!-- REFILL -->
+
+                <button id="mobileRefill">
+
+                    <span class="refillIcon">
+                        ✦
+                    </span>
+
+                    <span id="mobileRefillText">
+                        REFILL
+                    </span>
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- SMALL SPACE / REFILL TAB -->
+
+        <div id="refillHint">
+
+            SPACE
+            <span id="refillHintText">
+                READY
+            </span>
+
+        </div>
+
+
+        <!-- RESTART -->
+
+        <button id="restartButton">
+
+            ↻ RESTART
+
+        </button>
+
+
+    </div>
+
+
+    <!-- =========================
+         START SCREEN
+    ========================== -->
+
+    <div id="startScreen">
+
+        <div class="startBox">
+
+            <h1>
+                REDVERSE
+            </h1>
+
+            <h2>
+                A.1
+            </h2>
+
+            <p>
+                Red Verse Alpha 1
+            </p>
+
+            <button id="startButton">
+                START GAME
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script src="game-script.js"></script>
+
+</body>
+
+</html>
