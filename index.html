@@ -117,7 +117,7 @@ onclick="toggleExtraMenu()" aria-label="Open menu">
                 class="character-card"
                 data-name="Jack Redon Red The Red Diamond"
 		data-order="1"
-                onclick="openCharacter('jack')"
+                onclick="characterInProgress(event)"
             >
 
                 <div class="character-image jack">
@@ -137,15 +137,14 @@ onclick="toggleExtraMenu()" aria-label="Open menu">
 				<div class="character-stories">
 
 					<div
-class="character-stories-title">
+	class="character-stories-title">
 				STORIES
 					</div>
 					<a
-href="story-jack-redon-1.html"
+	href="story-jack-redon-1.html"
+	class="character-story-link"
 
-class="character-story-link"
-
-onclick="event.stopPropagation()"
+	onclick="storyInProgress(event)"
 			>
 				A DIAMOND'S BIND
 					</a>
@@ -211,7 +210,7 @@ onclick="event.stopPropagation()"
                 class="character-card"
                 data-name="Jester Dawn"
 		data-order="3"
-                onclick="openCharacter('jester')"
+                onclick="characterInProgress(event)"
             >
 
                 <div class="character-image jester">
@@ -239,7 +238,7 @@ href="story-jester-dawn-1.html"
 
 class="character-story-link"
 
-onclick="event.stopPropagation()"
+onclick="storyInProgress(event)"
 			>
 				HAPPY FACE, SAD LIFE
 					</a>
@@ -258,7 +257,7 @@ onclick="event.stopPropagation()"
                 class="character-card"
                 data-name="Alex Sakuro"
 		data-order="4"
-                onclick="openCharacter('alex')"
+                onclick="characterInProgress(event)"
             >
 
                 <div class="character-image alex">
@@ -286,7 +285,7 @@ href="story-alex-sakuro-1.html"
 
 class="character-story-link"
 
-onclick="event.stopPropagation()"
+onclick="storyInProgress(event)"
 			>
 				CAUGHT BETWEEN THE LINES OF DUTY
 					</a>
@@ -304,7 +303,7 @@ onclick="event.stopPropagation()"
                 class="character-card"
                 data-name="Mac Whitlock"
 		data-order="5"
-                onclick="openCharacter('mack')"
+                onclick="characterInProgress(event)"
             >
 
                 <div class="character-image mac">
@@ -332,7 +331,7 @@ href="story-mac-whitlock-1.html"
 
 class="character-story-link"
 
-onclick="event.stopPropagation()"
+onclick="storyInProgress(event)"
 			>
 				CRYING BLADE
 					</a>
