@@ -1,3 +1,9 @@
+"use strict";
+
+/* =========================================================
+   CANVAS
+========================================================= */
+
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
@@ -20,32 +26,6 @@ const mouse = {
 
 
 /* =========================================================
-   MOBILE INPUT
-========================================================= */
-
-const mobileInput = {
-
-    joystickActive: false,
-
-    joystickX: 0,
-    joystickY: 0,
-
-    sprint: false,
-
-    shield: false
-
-};
-
-
-const joystick = document.getElementById("joystick");
-const joystickKnob =
-    document.getElementById("joystickKnob");
-
-
-let joystickPointerId = null;
-
-
-/* =========================================================
    GAME STATE
 ========================================================= */
 
@@ -61,905 +41,6 @@ let lastTime = 0;
 const SPELL_COOLDOWN = 60;
 
 let spellCooldown = 0;
-
-
-/* =========================================================
-   SPRINT
-========================================================= */
-
-let sprintExhausted = false;
-
-const SPRINT_EXHAUST_THRESHOLD = 20;
-
-
-/* =========================================================
-   GAME RESET
-========================================================= */
-
-function resetGame() {
-
-    gameStarted = true;
-    gamePaused = false;
-
-    lastTime = performance.now();
-
-
-    /* PLAYER */
-
-    player.x = WIDTH / 2;
-    player.y = HEIGHT / 2;
-
-    player.hp = 100;
-    player.maxHp = 100;
-
-    player.mana = 100;
-    player.maxMana = 100;
-
-    player.hunger = 100;
-    player.maxHunger = 100;
-
-    player.energy = 100;
-    player.maxEnergy = 100;
-
-    player.level = 1;
-
-    player.xp = 0;
-    player.xpNeeded = 100;
-
-    player.damage = 18;
-
-    player.attackSpeed = 0;
-
-    player.skillDamageBonus = 0;
-
-    player.blocking = false;
-
-    player.facing = 0;
-
-
-    /* TIMERS */
-
-    playerStunTimer = 0;
-
-    attackTimer = 0;
-
-    spellCooldown = 0;
-
-    sprintExhausted = false;
-
-
-    /* ENEMIES */
-
-    enemies = [];
-
-    foods = [];
-
-    bossCracks = [];
-
-    ricochetTargets = [];
-
-    ricochetTimer = 0;
-
-    ultimateFlashTimer = 0;
-
-
-    enemiesDefeated = 0;
-
-    spawnTimer = 0;
-
-    nextBossSpawn =
-        randomInt(50, 80);
-
-
-    /* SKILLS */
-
-    skills.Q.timer = 0;
-    skills.E.timer = 0;
-    skills.R.timer = 0;
-    skills.T.timer = 0;
-
-
-    updateSkillManaCosts();
-
-
-    /* INPUT */
-
-    mouse.left = false;
-    mouse.right = false;
-
-    mobileInput.joystickActive = false;
-    mobileInput.joystickX = 0;
-    mobileInput.joystickY = 0;
-
-    mobileInput.sprint = false;
-    mobileInput.shield = false;
-
-
-    keys["shift"] = false;
-
-
-    resetJoystick();
-
-
-    /* START SCREEN */
-
-    const startScreen =
-        document.getElementById("startScreen");
-
-    if (startScreen) {
-
-        startScreen.style.display = "none";
-
-    }
-
-
-    updateHUD();
-
-}
-
-
-/* =========================================================
-   START GAME
-========================================================= */
-
-function initializeStartButton() {
-
-    const startButton =
-        document.getElementById("startButton");
-
-    if (!startButton) {
-        return;
-    }
-
-
-    startButton.addEventListener(
-        "click",
-        function(event) {
-
-            event.preventDefault();
-
-            event.stopPropagation();
-
-            resetGame();
-
-        }
-    );
-
-}
-
-
-if (
-    document.readyState === "loading"
-) {
-
-    document.addEventListener(
-        "DOMContentLoaded",
-        initializeStartButton
-    );
-
-}
-
-else {
-
-    initializeStartButton();
-
-}
-
-
-/* =========================================================
-   RESTART BUTTON
-========================================================= */
-
-const restartButton =
-    document.getElementById("restartButton");
-
-
-if (restartButton) {
-
-    restartButton.addEventListener(
-        "click",
-        function(event) {
-
-            event.preventDefault();
-
-            event.stopPropagation();
-
-            resetGame();
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   KEYBOARD
-========================================================= */
-
-window.addEventListener(
-    "keydown",
-    function(event) {
-
-        const key =
-            event.key.toLowerCase();
-
-
-        keys[key] = true;
-
-
-        /* ESC */
-
-        if (key === "escape") {
-
-            if (!gameStarted) {
-                return;
-            }
-
-
-            gamePaused =
-                !gamePaused;
-
-
-            mouse.left = false;
-            mouse.right = false;
-
-
-            lastTime =
-                performance.now();
-
-
-            return;
-
-        }
-
-
-        if (event.repeat) {
-            return;
-        }
-
-
-        /* SPACE */
-
-        if (key === " ") {
-
-            event.preventDefault();
-
-            useSpell();
-
-            return;
-
-        }
-
-
-        /* SKILLS */
-
-        if (key === "q") {
-            useSkill("Q");
-        }
-
-        if (key === "e") {
-            useSkill("E");
-        }
-
-        if (key === "r") {
-            useSkill("R");
-        }
-
-        if (key === "t") {
-            useSkill("T");
-        }
-
-    }
-);
-
-
-window.addEventListener(
-    "keyup",
-    function(event) {
-
-        keys[
-            event.key.toLowerCase()
-        ] = false;
-
-    }
-);
-
-
-/* =========================================================
-   MOUSE
-========================================================= */
-
-canvas.addEventListener(
-    "mousemove",
-    function(event) {
-
-        const rect =
-            canvas.getBoundingClientRect();
-
-
-        mouse.x =
-            (event.clientX - rect.left) *
-            WIDTH /
-            rect.width;
-
-
-        mouse.y =
-            (event.clientY - rect.top) *
-            HEIGHT /
-            rect.height;
-
-    }
-);
-
-
-canvas.addEventListener(
-    "mousedown",
-    function(event) {
-
-        if (gamePaused) {
-            return;
-        }
-
-
-        if (event.button === 0) {
-
-            mouse.left = true;
-
-            basicAttack();
-
-        }
-
-
-        if (event.button === 2) {
-
-            mouse.right = true;
-
-        }
-
-    }
-);
-
-
-canvas.addEventListener(
-    "mouseup",
-    function(event) {
-
-        if (event.button === 0) {
-
-            mouse.left = false;
-
-        }
-
-
-        if (event.button === 2) {
-
-            mouse.right = false;
-
-        }
-
-    }
-);
-
-
-canvas.addEventListener(
-    "contextmenu",
-    function(event) {
-
-        event.preventDefault();
-
-    }
-);
-
-
-/* =========================================================
-   MOBILE SCREEN TAP = BASIC ATTACK
-========================================================= */
-
-canvas.addEventListener(
-    "touchstart",
-    function(event) {
-
-        /*
-         * Do not interfere with mobile
-         * control buttons.
-         *
-         * A touch directly on the game
-         * canvas performs a basic attack.
-         */
-
-        if (
-            !gameStarted ||
-            gamePaused
-        ) {
-
-            return;
-
-        }
-
-
-        if (
-            event.touches.length > 0
-        ) {
-
-            const touch =
-                event.touches[0];
-
-
-            const rect =
-                canvas.getBoundingClientRect();
-
-
-            mouse.x =
-                (touch.clientX -
-                 rect.left) *
-                WIDTH /
-                rect.width;
-
-
-            mouse.y =
-                (touch.clientY -
-                 rect.top) *
-                HEIGHT /
-                rect.height;
-
-
-            basicAttack();
-
-        }
-
-    },
-    {
-        passive: false
-    }
-);
-
-
-/* =========================================================
-   JOYSTICK
-========================================================= */
-
-function updateJoystick(
-    clientX,
-    clientY
-) {
-
-    const rect =
-        joystick.getBoundingClientRect();
-
-
-    const centerX =
-        rect.left +
-        rect.width / 2;
-
-
-    const centerY =
-        rect.top +
-        rect.height / 2;
-
-
-    let dx =
-        clientX -
-        centerX;
-
-
-    let dy =
-        clientY -
-        centerY;
-
-
-    const radius =
-        rect.width / 2;
-
-
-    const distance =
-        Math.hypot(
-            dx,
-            dy
-        );
-
-
-    if (
-        distance >
-        radius
-    ) {
-
-        dx =
-            dx /
-            distance *
-            radius;
-
-
-        dy =
-            dy /
-            distance *
-            radius;
-
-    }
-
-
-    const normalizedDistance =
-        Math.min(
-            1,
-            Math.hypot(dx, dy) /
-            radius
-        );
-
-
-    if (
-        normalizedDistance <
-        0.12
-    ) {
-
-        mobileInput.joystickX = 0;
-        mobileInput.joystickY = 0;
-
-    }
-
-    else {
-
-        mobileInput.joystickX =
-            dx / radius;
-
-
-        mobileInput.joystickY =
-            dy / radius;
-
-    }
-
-
-    joystickKnob.style.transform =
-        `translate(
-            calc(-50% + ${dx}px),
-            calc(-50% + ${dy}px)
-        )`;
-
-}
-
-
-function resetJoystick() {
-
-    mobileInput.joystickActive = false;
-
-    mobileInput.joystickX = 0;
-    mobileInput.joystickY = 0;
-
-    if (joystickKnob) {
-
-        joystickKnob.style.transform =
-            "translate(-50%, -50%)";
-
-    }
-
-}
-
-
-if (joystick) {
-
-    joystick.addEventListener(
-        "pointerdown",
-        function(event) {
-
-            event.preventDefault();
-
-            joystickPointerId =
-                event.pointerId;
-
-            mobileInput.joystickActive =
-                true;
-
-            joystick.setPointerCapture(
-                event.pointerId
-            );
-
-
-            updateJoystick(
-                event.clientX,
-                event.clientY
-            );
-
-        }
-    );
-
-
-    joystick.addEventListener(
-        "pointermove",
-        function(event) {
-
-            if (
-                event.pointerId !==
-                joystickPointerId
-            ) {
-
-                return;
-
-            }
-
-
-            updateJoystick(
-                event.clientX,
-                event.clientY
-            );
-
-        }
-    );
-
-
-    joystick.addEventListener(
-        "pointerup",
-        function(event) {
-
-            if (
-                event.pointerId !==
-                joystickPointerId
-            ) {
-
-                return;
-
-            }
-
-
-            resetJoystick();
-
-            joystickPointerId = null;
-
-        }
-    );
-
-
-    joystick.addEventListener(
-        "pointercancel",
-        function() {
-
-            resetJoystick();
-
-            joystickPointerId = null;
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   MOBILE SPRINT
-========================================================= */
-
-const mobileSprint =
-    document.getElementById(
-        "mobileSprint"
-    );
-
-
-function setSprint(active) {
-
-    mobileInput.sprint =
-        active;
-
-
-    if (mobileSprint) {
-
-        mobileSprint.classList.toggle(
-            "active",
-            active &&
-            !sprintExhausted
-        );
-
-    }
-
-}
-
-
-if (mobileSprint) {
-
-    mobileSprint.addEventListener(
-        "pointerdown",
-        function(event) {
-
-            event.preventDefault();
-
-            event.stopPropagation();
-
-
-            if (
-                sprintExhausted
-            ) {
-
-                return;
-
-            }
-
-
-            setSprint(true);
-
-        }
-    );
-
-
-    mobileSprint.addEventListener(
-        "pointerup",
-        function(event) {
-
-            event.preventDefault();
-
-            setSprint(false);
-
-        }
-    );
-
-
-    mobileSprint.addEventListener(
-        "pointercancel",
-        function() {
-
-            setSprint(false);
-
-        }
-    );
-
-
-    mobileSprint.addEventListener(
-        "pointerleave",
-        function() {
-
-            setSprint(false);
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   MOBILE SHIELD
-========================================================= */
-
-const mobileShield =
-    document.getElementById(
-        "mobileShield"
-    );
-
-
-function setShield(active) {
-
-    mobileInput.shield =
-        active;
-
-
-    if (mobileShield) {
-
-        mobileShield.classList.toggle(
-            "active",
-            active
-        );
-
-    }
-
-}
-
-
-if (mobileShield) {
-
-    mobileShield.addEventListener(
-        "pointerdown",
-        function(event) {
-
-            event.preventDefault();
-
-            event.stopPropagation();
-
-            setShield(true);
-
-        }
-    );
-
-
-    mobileShield.addEventListener(
-        "pointerup",
-        function(event) {
-
-            event.preventDefault();
-
-            setShield(false);
-
-        }
-    );
-
-
-    mobileShield.addEventListener(
-        "pointercancel",
-        function() {
-
-            setShield(false);
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   MOBILE SKILL BUTTONS
-========================================================= */
-
-function connectMobileSkill(
-    elementId,
-    skillKey
-) {
-
-    const element =
-        document.getElementById(
-            elementId
-        );
-
-
-    if (!element) {
-        return;
-    }
-
-
-    element.addEventListener(
-        "pointerdown",
-        function(event) {
-
-            event.preventDefault();
-
-            event.stopPropagation();
-
-            useSkill(skillKey);
-
-        }
-    );
-
-}
-
-
-connectMobileSkill(
-    "mobileSkillQ",
-    "Q"
-);
-
-connectMobileSkill(
-    "mobileSkillE",
-    "E"
-);
-
-connectMobileSkill(
-    "mobileSkillR",
-    "R"
-);
-
-connectMobileSkill(
-    "mobileSkillT",
-    "T"
-);
-
-
-/* =========================================================
-   MOBILE REFILL
-========================================================= */
-
-const mobileRefill =
-    document.getElementById(
-        "mobileRefill"
-    );
-
-
-if (mobileRefill) {
-
-    mobileRefill.addEventListener(
-        "pointerdown",
-        function(event) {
-
-            event.preventDefault();
-
-            event.stopPropagation();
-
-            useSpell();
-
-        }
-    );
-
-}
 
 
 /* =========================================================
@@ -1001,16 +82,165 @@ const player = {
 
     blocking: false,
 
-    facing: 0
+    facing: 0,
 
+    /*
+     * Sprint becomes unavailable once energy
+     * reaches below 20%.
+     *
+     * It must reach 100% before sprint
+     * becomes available again.
+     */
+
+    sprintLocked: false,
+	blockLocked:false
 };
 
 
+let playerStunTimer = 0;
+
+
 /* =========================================================
-   STUN
+   INPUT EVENTS
 ========================================================= */
 
-let playerStunTimer = 0;
+window.addEventListener("keydown", function(event) {
+
+    const key = event.key.toLowerCase();
+
+    keys[key] = true;
+
+
+    if (key === "escape") {
+
+        if (!gameStarted) {
+            return;
+        }
+
+        gamePaused = !gamePaused;
+
+        if (gamePaused) {
+            mouse.left = false;
+            mouse.right = false;
+        }
+
+const pauseOverlay = 
+document.getElementById("pauseOverlay");
+
+if (pauseOverlay) {
+	pauseOverlay.classList.toggle(
+		"hidden",
+	!gamePaused
+	);
+}
+
+        lastTime = performance.now();
+
+        return;
+    }
+
+
+    if (event.repeat) {
+        return;
+    }
+
+
+    if (key === " ") {
+
+        event.preventDefault();
+
+        useSpell();
+
+        return;
+    }
+
+
+    if (key === "q") {
+        useSkill("Q");
+    }
+
+    if (key === "e") {
+        useSkill("E");
+    }
+
+    if (key === "r") {
+        useSkill("R");
+    }
+
+    if (key === "t") {
+        useSkill("T");
+    }
+
+});
+
+
+window.addEventListener("keyup", function(event) {
+
+    keys[event.key.toLowerCase()] = false;
+
+});
+
+
+/* =========================================================
+   MOUSE
+========================================================= */
+
+canvas.addEventListener("mousemove", function(event) {
+
+    const rect = canvas.getBoundingClientRect();
+
+    mouse.x =
+        (event.clientX - rect.left) *
+        WIDTH /
+        rect.width;
+
+    mouse.y =
+        (event.clientY - rect.top) *
+        HEIGHT /
+        rect.height;
+
+});
+
+
+canvas.addEventListener("mousedown", function(event) {
+
+    if (gamePaused) {
+        return;
+    }
+
+    if (event.button === 0) {
+
+        mouse.left = true;
+
+        basicAttack();
+    }
+
+    if (event.button === 2) {
+
+        mouse.right = true;
+    }
+
+});
+
+
+canvas.addEventListener("mouseup", function(event) {
+
+    if (event.button === 0) {
+        mouse.left = false;
+    }
+
+    if (event.button === 2) {
+        mouse.right = false;
+    }
+
+});
+
+
+canvas.addEventListener("contextmenu", function(event) {
+
+    event.preventDefault();
+
+});
 
 
 /* =========================================================
@@ -1019,30 +249,22 @@ let playerStunTimer = 0;
 
 function getSkillDamage() {
 
-    const hpConversion =
-        player.hp * 0.30;
-
-    return hpConversion * 0.60;
+    return player.hp * 0.30 * 0.60;
 
 }
 
 
 function getBasicAttackDamage() {
 
-    const hpConversion =
-        player.hp * 0.30;
-
-    return hpConversion * 0.75;
+    return player.hp * 0.30 * 0.75;
 
 }
 
 
 function getSkillBonusDamage() {
 
-    return (
-        player.skillDamageBonus +
-        getSkillDamage()
-    );
+    return player.skillDamageBonus +
+        getSkillDamage();
 
 }
 
@@ -1064,8 +286,7 @@ let spawnTimer = 0;
 
 let enemiesDefeated = 0;
 
-let nextBossSpawn =
-    randomInt(50, 80);
+let nextBossSpawn = randomInt(50, 80);
 
 
 /* =========================================================
@@ -1097,77 +318,174 @@ let ultimateFlashTimer = 0;
 const skills = {
 
     Q: {
-
         name: "POWER STRIKE",
-
         baseMana: 15,
         mana: 15,
-
         cooldown: 1,
         timer: 0
-
     },
-
 
     E: {
-
         name: "RICOCHET",
-
         baseMana: 20,
         mana: 20,
-
         cooldown: 2,
         timer: 0
-
     },
-
 
     R: {
-
         name: "SHOCKWAVE",
-
         baseMana: 40,
         mana: 40,
-
         cooldown: 4,
         timer: 0
-
     },
 
-
     T: {
-
         name: "ULTIMATE",
-
         baseMana: 70,
         mana: 70,
-
         cooldown: 10,
         timer: 0
+    },
 
+    SPACE: {
+        name: "RECOVERY",
+        cooldown: 60,
+        timer: 0
     }
 
 };
 
 
 /* =========================================================
-   MANA COSTS
+   RESET GAME
+========================================================= */
+
+function resetGame() {
+
+    player.x = WIDTH / 2;
+    player.y = HEIGHT / 2;
+
+    player.hp = 100;
+    player.maxHp = 100;
+
+    player.mana = 100;
+    player.maxMana = 100;
+
+    player.hunger = 100;
+    player.maxHunger = 100;
+
+    player.energy = 100;
+    player.maxEnergy = 100;
+
+    player.level = 1;
+
+    player.xp = 0;
+    player.xpNeeded = 100;
+
+    player.damage = 18;
+
+    player.attackSpeed = 0;
+
+    player.skillDamageBonus = 0;
+
+    player.sprintLocked = false;
+player.blockLocked = false;	
+
+    playerStunTimer = 0;
+
+    enemies = [];
+    foods = [];
+    bossCracks = [];
+
+    ricochetTargets = [];
+
+    ricochetTimer = 0;
+    ultimateFlashTimer = 0;
+
+    spawnTimer = 0;
+
+    enemiesDefeated = 0;
+
+    nextBossSpawn = randomInt(50, 80);
+
+    spellCooldown = 0;
+
+    attackTimer = 0;
+
+    for (const key in skills) {
+        skills[key].timer = 0;
+    }
+
+    updateSkillManaCosts();
+    updateHUD();
+
+}
+
+
+/* =========================================================
+   START
+========================================================= */
+
+function startGame() {
+
+    resetGame();
+
+    gameStarted = true;
+    gamePaused = false;
+
+    document.getElementById("startScreen").style.display = "none";
+
+    const restartButton =
+        document.getElementById("restartButton");
+
+    if (restartButton) {
+        restartButton.style.display = "block";
+    }
+
+    lastTime = performance.now();
+
+}
+
+
+document
+    .getElementById("startButton")
+    .addEventListener("click", function(event) {
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        startGame();
+
+    });
+
+
+document
+    .getElementById("restartButton")
+    .addEventListener("click", function(event) {
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        startGame();
+
+    });
+
+
+/* =========================================================
+   SKILL MANA
 ========================================================= */
 
 function updateSkillManaCosts() {
 
     for (const key in skills) {
 
-        const skill =
-            skills[key];
-
+        const skill = skills[key];
 
         skill.mana =
             skill.baseMana +
-            (
-                (player.level - 1) *
-                5
-            );
+            ((player.level - 1) * 5);
 
     }
 
@@ -1181,26 +499,19 @@ function updateSkillManaCosts() {
 function randomInt(min, max) {
 
     return Math.floor(
-        Math.random() *
-        (max - min + 1)
+        Math.random() * (max - min + 1)
     ) + min;
 
 }
 
 
 /* =========================================================
-   ENEMY LEVEL
+   ENEMY SCALING
 ========================================================= */
 
 function getEnemyLevelMultiplier() {
 
-    return (
-        1 +
-        (
-            (player.level - 1) *
-            0.12
-        )
-    );
+    return 1 + ((player.level - 1) * 0.12);
 
 }
 
@@ -1209,46 +520,31 @@ function getEnemyLevelMultiplier() {
    SPAWN ENEMY
 ========================================================= */
 
-function spawnEnemy(
-    forceBoss = false
-) {
+function spawnEnemy(forceBoss = false) {
 
-    const side =
-        Math.floor(
-            Math.random() * 4
-        );
-
+    const side = Math.floor(Math.random() * 4);
 
     let x;
     let y;
 
-
     if (side === 0) {
-
         x = Math.random() * WIDTH;
         y = 30;
-
     }
 
     else if (side === 1) {
-
         x = WIDTH - 30;
         y = Math.random() * HEIGHT;
-
     }
 
     else if (side === 2) {
-
         x = Math.random() * WIDTH;
         y = HEIGHT - 30;
-
     }
 
     else {
-
         x = 30;
         y = Math.random() * HEIGHT;
-
     }
 
 
@@ -1257,33 +553,23 @@ function spawnEnemy(
         spawnBoss(x, y);
 
         return;
-
     }
 
 
-    const roll =
-        Math.random();
-
+    const roll = Math.random();
 
     let enemyType;
 
-
     if (roll < 0.60) {
-
         enemyType = "normal";
-
     }
 
     else if (roll < 0.80) {
-
         enemyType = "tank";
-
     }
 
     else {
-
         enemyType = "ranged";
-
     }
 
 
@@ -1298,126 +584,61 @@ function spawnEnemy(
 
         const baseHp = 40;
 
-
         enemy = {
-
             type: "normal",
-
             x,
             y,
-
             size: 22,
-
-            hp:
-                baseHp *
-                multiplier,
-
-            maxHp:
-                baseHp *
-                multiplier,
-
-            speed:
-                65 *
-                multiplier,
-
-            damage:
-                7.5 *
-                multiplier,
-
+            hp: baseHp * multiplier,
+            maxHp: baseHp * multiplier,
+            speed: 65 * multiplier,
+            damage: 7.5 * multiplier,
             attackRange: 30,
-
             attackCooldown: 1.4,
-
             attackTimer: 0,
-
             stunTimer: 0
-
         };
 
     }
-
 
     else if (enemyType === "tank") {
 
         const baseHp = 145;
 
-
         enemy = {
-
             type: "tank",
-
             x,
             y,
-
             size: 30,
-
-            hp:
-                baseHp *
-                multiplier,
-
-            maxHp:
-                baseHp *
-                multiplier,
-
-            speed:
-                45 *
-                multiplier,
-
-            damage:
-                3.5 *
-                multiplier,
-
+            hp: baseHp * multiplier,
+            maxHp: baseHp * multiplier,
+            speed: 45 * multiplier,
+            damage: 3.5 * multiplier,
             attackRange: 35,
-
             attackCooldown: 2.2,
-
             attackTimer: 0,
-
             stunTimer: 0
-
         };
 
     }
-
 
     else {
 
         const baseHp = 30;
 
-
         enemy = {
-
             type: "ranged",
-
             x,
             y,
-
             size: 20,
-
-            hp:
-                baseHp *
-                multiplier,
-
-            maxHp:
-                baseHp *
-                multiplier,
-
-            speed:
-                55 *
-                multiplier,
-
-            damage:
-                3.2 *
-                multiplier,
-
+            hp: baseHp * multiplier,
+            maxHp: baseHp * multiplier,
+            speed: 55 * multiplier,
+            damage: 3.2 * multiplier,
             attackRange: 85,
-
             attackCooldown: 0.7,
-
             attackTimer: 0,
-
             stunTimer: 0
-
         };
 
     }
@@ -1437,11 +658,9 @@ function spawnBoss(x, y) {
     const multiplier =
         getEnemyLevelMultiplier();
 
-
     const baseHp = 195;
 
-
-    const boss = {
+    enemies.push({
 
         type: "boss",
 
@@ -1450,62 +669,41 @@ function spawnBoss(x, y) {
 
         size: 42,
 
-        hp:
-            baseHp *
-            multiplier,
+        hp: baseHp * multiplier,
+        maxHp: baseHp * multiplier,
 
-        maxHp:
-            baseHp *
-            multiplier,
-
-        speed:
-            65 *
-            multiplier,
-
-        damage:
-            11 *
-            multiplier,
+        speed: 65 * multiplier,
+        damage: 11 * multiplier,
 
         attackRange: 48,
 
         attackCooldown: 1.4,
-
         attackTimer: 0,
 
         stunTimer: 0,
 
-
         groundSkillCooldown: 12,
-
         groundSkillTimer: 4,
 
         groundSkillWarning: false,
-
         groundSkillWarningTime: 1.5,
 
         groundSkillAngle: 0,
 
         groundSkillX: x,
-
         groundSkillY: y,
 
-
         barrierCooldown: 4,
-
         barrierTimer: 4,
 
         barrierActive: false,
 
         barrierDuration: 1,
-
         barrierTimeRemaining: 0,
 
         barrierRadius: 100
 
-    };
-
-
-    enemies.push(boss);
+    });
 
 }
 
@@ -1520,40 +718,10 @@ function updatePlayer(dt) {
     let dy = 0;
 
 
-    /* KEYBOARD */
-
-    if (keys["w"]) {
-        dy -= 1;
-    }
-
-    if (keys["s"]) {
-        dy += 1;
-    }
-
-    if (keys["a"]) {
-        dx -= 1;
-    }
-
-    if (keys["d"]) {
-        dx += 1;
-    }
-
-
-    /* MOBILE JOYSTICK */
-
-    if (
-        mobileInput.joystickActive ||
-        mobileInput.joystickX !== 0 ||
-        mobileInput.joystickY !== 0
-    ) {
-
-        dx =
-            mobileInput.joystickX;
-
-        dy =
-            mobileInput.joystickY;
-
-    }
+    if (keys["w"]) dy--;
+    if (keys["s"]) dy++;
+    if (keys["a"]) dx--;
+    if (keys["d"]) dx++;
 
 
     const moving =
@@ -1561,280 +729,131 @@ function updatePlayer(dt) {
         dy !== 0;
 
 
-    let speed =
-        player.speed;
+    let speed = player.speed;
 
 
     /* =====================================================
        SPRINT
     ===================================================== */
 
-    const keyboardSprint =
-        keys["shift"];
+    if (
+        player.energy >= player.maxEnergy
+    ) {
 
+        player.sprintLocked = false;
 
-    const mobileSprintActive =
-        mobileInput.sprint;
-
-
-    const sprinting =
-        (
-            keyboardSprint ||
-            mobileSprintActive
-        ) &&
-        moving;
+    }
 
 
     if (
-        sprinting &&
-        !sprintExhausted &&
+        keys["shift"] &&
+        moving &&
+        !player.sprintLocked &&
         player.energy > 0
     ) {
 
-        speed =
-            player.sprintSpeed;
+        speed = player.sprintSpeed;
 
-
-        player.energy -=
-            25 * dt;
+        player.energy -= 25 * dt;
 
 
         /*
-         * Once energy reaches 20%,
-         * sprint becomes exhausted.
+         * Once energy drops below 20%,
+         * sprint becomes locked.
          */
 
-        const energyPercent =
-            player.energy /
-            player.maxEnergy *
-            100;
-
-
         if (
-            energyPercent <=
-            SPRINT_EXHAUST_THRESHOLD
+            player.energy <
+            player.maxEnergy * 0.20
         ) {
 
-            player.energy =
-                player.maxEnergy *
-                0.20;
-
-
-            sprintExhausted =
-                true;
-
-
-            keys["shift"] = false;
-
-            mobileInput.sprint =
-                false;
-
-
-            if (mobileSprint) {
-
-                mobileSprint.classList.remove(
-                    "active"
-                );
-
-                mobileSprint.classList.add(
-                    "exhausted"
-                );
-
-            }
+            player.sprintLocked = true;
 
         }
 
     }
 
-    else if (player.blocking) {
+    else if (player.blocking && !
+player.sprintLocked) {
 
-        player.energy -=
-            20 * dt;
-
+        player.energy -= 25 * dt;
+	
+	if (player.energy <
+player.maxEnergy * 0.20) {
+	player.energy =
+player.maxEnergy * 0.20;
+	player.sprintLocked = true;
+	}
     }
 
     else {
 
-        /*
-         * Energy regenerates normally.
-         */
-
-        player.energy +=
-            15 * dt;
+        player.energy += 15 * dt;
 
     }
 
 
-    /* =====================================================
-       ENERGY
-    ===================================================== */
+    player.energy = Math.max(
+        0,
+        Math.min(
+            player.maxEnergy,
+            player.energy
+        )
+    );
 
-    player.energy =
-        Math.max(
-            0,
-            Math.min(
-                player.maxEnergy,
-                player.energy
-            )
-        );
-
-
-    /*
-     * IMPORTANT:
-     *
-     * Sprint stays locked after
-     * reaching 20%.
-     *
-     * It only unlocks at 100%.
-     */
-
-    if (
-        sprintExhausted &&
-        player.energy >=
-        player.maxEnergy
-    ) {
-
-        player.energy =
-            player.maxEnergy;
-
-
-        sprintExhausted =
-            false;
-
-
-        if (mobileSprint) {
-
-            mobileSprint.classList.remove(
-                "exhausted"
-            );
-
-        }
-
-    }
-
-
-    /* =====================================================
-       MOVEMENT
-    ===================================================== */
 
     if (moving) {
 
         const length =
-            Math.sqrt(
-                dx * dx +
-                dy * dy
-            );
+            Math.sqrt(dx * dx + dy * dy);
 
+        dx /= length;
+        dy /= length;
 
-        if (length > 0) {
-
-            dx /= length;
-            dy /= length;
-
-
-            player.x +=
-                dx *
-                speed *
-                dt;
-
-
-            player.y +=
-                dy *
-                speed *
-                dt;
-
-        }
+        player.x += dx * speed * dt;
+        player.y += dy * speed * dt;
 
     }
 
 
-    /* MAP BOUNDARIES */
+    player.x = Math.max(
+        player.size,
+        Math.min(
+            WIDTH - player.size,
+            player.x
+        )
+    );
 
-    player.x =
-        Math.max(
-            player.size,
-            Math.min(
-                WIDTH -
-                player.size,
-                player.x
-            )
+    player.y = Math.max(
+        player.size,
+        Math.min(
+            HEIGHT - player.size,
+            player.y
+        )
+    );
+
+
+    player.facing =
+        Math.atan2(
+            mouse.y - player.y,
+            mouse.x - player.x
         );
 
-
-    player.y =
-        Math.max(
-            player.size,
-            Math.min(
-                HEIGHT -
-                player.size,
-                player.y
-            )
-        );
-
-
-    /* =====================================================
-       FACING
-    ===================================================== */
-
-    /*
-     * On mobile, the player faces
-     * the joystick direction.
-     */
-
-    if (
-        mobileInput.joystickX !== 0 ||
-        mobileInput.joystickY !== 0
-    ) {
-
-        player.facing =
-            Math.atan2(
-                mobileInput.joystickY,
-                mobileInput.joystickX
-            );
-
-    }
-
-    else {
-
-        player.facing =
-            Math.atan2(
-                mouse.y -
-                player.y,
-
-                mouse.x -
-                player.x
-            );
-
-    }
-
-
-    /* =====================================================
-       BLOCK
-    ===================================================== */
 
     player.blocking =
-        (
-            mouse.right ||
-            mobileInput.shield
-        ) &&
+        mouse.right &&
         player.energy > 0;
 
 
-    /* =====================================================
-       DESKTOP HELD ATTACK
-    ===================================================== */
-
     if (mouse.left) {
-
         basicAttack();
-
     }
 
 }
 
 
 /* =========================================================
-   FACING CHECK
+   FACING
 ========================================================= */
 
 function isFacingTarget(
@@ -1844,45 +863,24 @@ function isFacingTarget(
 
     const angleToTarget =
         Math.atan2(
-            target.y -
-            player.y,
-
-            target.x -
-            player.x
+            target.y - player.y,
+            target.x - player.x
         );
 
-
     let difference =
-        angleToTarget -
-        player.facing;
+        angleToTarget - player.facing;
 
 
-    while (
-        difference >
-        Math.PI
-    ) {
+    while (difference > Math.PI) {
+        difference -= Math.PI * 2;
+    }
 
-        difference -=
-            Math.PI * 2;
-
+    while (difference < -Math.PI) {
+        difference += Math.PI * 2;
     }
 
 
-    while (
-        difference <
-        -Math.PI
-    ) {
-
-        difference +=
-            Math.PI * 2;
-
-    }
-
-
-    return (
-        Math.abs(difference) <=
-        maxAngle
-    );
+    return Math.abs(difference) <= maxAngle;
 
 }
 
@@ -1898,8 +896,7 @@ function getAttackCooldown() {
 
     return Math.max(
         0.05,
-        0.38 -
-        player.attackSpeed
+        0.38 - player.attackSpeed
     );
 
 }
@@ -1907,99 +904,63 @@ function getAttackCooldown() {
 
 function basicAttack() {
 
-    if (
-        !gameStarted ||
-        gamePaused
-    ) {
-
+    if (!gameStarted || gamePaused) {
         return;
+    }
 
+    if (playerStunTimer > 0) {
+        return;
+    }
+
+    if (attackTimer > 0) {
+        return;
     }
 
 
-    if (
-        playerStunTimer > 0
-    ) {
-
-        return;
-
-    }
+    attackTimer = getAttackCooldown();
 
 
-    if (
-        attackTimer > 0
-    ) {
-
-        return;
-
-    }
-
-
-    attackTimer =
-        getAttackCooldown();
-
-
-    const attackRange =
-        110;
-
+    const attackRange = 110;
 
     let target = null;
 
-    let closestDistance =
-        attackRange;
+    let closestDistance = attackRange;
 
 
-    enemies.forEach(
-        enemy => {
+    enemies.forEach(enemy => {
 
-            const distance =
-                Math.hypot(
-                    enemy.x -
-                    player.x,
+        const distance =
+            Math.hypot(
+                enemy.x - player.x,
+                enemy.y - player.y
+            );
 
-                    enemy.y -
-                    player.y
-                );
 
+        if (
+            distance <= closestDistance &&
+            isFacingTarget(enemy)
+        ) {
 
             if (
-                distance <=
-                closestDistance &&
-                isFacingTarget(enemy)
+                isProtectedByBossBarrier(enemy)
             ) {
-
-                if (
-                    isProtectedByBossBarrier(
-                        enemy
-                    )
-                ) {
-
-                    return;
-
-                }
-
-
-                closestDistance =
-                    distance;
-
-                target =
-                    enemy;
-
+                return;
             }
 
+
+            closestDistance = distance;
+            target = enemy;
+
         }
-    );
+
+    });
 
 
     if (target) {
 
-        const damage =
+        target.hp -=
             player.damage +
             getBasicAttackBonusDamage();
-
-
-        target.hp -=
-            damage;
 
     }
 
@@ -2012,66 +973,36 @@ function basicAttack() {
 
 function useSkill(key) {
 
-    if (
-        !gameStarted ||
-        gamePaused
-    ) {
-
+    if (!gameStarted || gamePaused) {
         return;
+    }
 
+    if (playerStunTimer > 0) {
+        return;
     }
 
 
-    if (
-        playerStunTimer > 0
-    ) {
-
-        return;
-
-    }
-
-
-    const skill =
-        skills[key];
-
+    const skill = skills[key];
 
     if (!skill) {
-
         return;
+    }
 
+    if (skill.timer > 0) {
+        return;
+    }
+
+    if (player.mana < skill.mana) {
+        return;
     }
 
 
-    if (
-        skill.timer > 0
-    ) {
+    player.mana -= skill.mana;
 
-        return;
-
-    }
+    skill.timer = skill.cooldown;
 
 
-    if (
-        player.mana <
-        skill.mana
-    ) {
-
-        return;
-
-    }
-
-
-    player.mana -=
-        skill.mana;
-
-
-    skill.timer =
-        skill.cooldown;
-
-
-    /* =====================================================
-       Q
-    ===================================================== */
+    /* Q */
 
     if (key === "Q") {
 
@@ -2080,57 +1011,43 @@ function useSkill(key) {
             getSkillBonusDamage();
 
 
-        enemies.forEach(
-            enemy => {
+        enemies.forEach(enemy => {
 
-                const distance =
-                    Math.hypot(
-                        enemy.x -
-                        player.x,
+            const distance =
+                Math.hypot(
+                    enemy.x - player.x,
+                    enemy.y - player.y
+                );
 
-                        enemy.y -
-                        player.y
-                    );
 
+            if (
+                distance < 90 &&
+                isFacingTarget(
+                    enemy,
+                    Math.PI / 3
+                )
+            ) {
 
                 if (
-                    distance < 90 &&
-                    isFacingTarget(
-                        enemy,
-                        Math.PI / 3
-                    )
+                    isProtectedByBossBarrier(enemy)
                 ) {
-
-                    if (
-                        isProtectedByBossBarrier(
-                            enemy
-                        )
-                    ) {
-
-                        return;
-
-                    }
-
-
-                    enemy.hp -=
-                        skillDamage;
-
+                    return;
                 }
 
+                enemy.hp -= skillDamage;
+
             }
-        );
+
+        });
 
     }
 
 
-    /* =====================================================
-       E
-    ===================================================== */
+    /* E */
 
     if (key === "E") {
 
         const maxTargets = 7;
-
 
         const skillDamage =
             player.damage * 3 +
@@ -2139,60 +1056,30 @@ function useSkill(key) {
 
         let targets =
             enemies
-
-                .map(
-                    enemy => {
-
-                        return {
-
-                            enemy,
-
-                            distance:
-                                Math.hypot(
-                                    enemy.x -
-                                    player.x,
-
-                                    enemy.y -
-                                    player.y
-                                )
-
-                        };
-
-                    }
+                .map(enemy => ({
+                    enemy,
+                    distance: Math.hypot(
+                        enemy.x - player.x,
+                        enemy.y - player.y
+                    )
+                }))
+                .filter(data =>
+                    data.distance <= 250 &&
+                    isFacingTarget(
+                        data.enemy,
+                        Math.PI / 3
+                    )
                 )
-
-                .filter(
-                    data => {
-
-                        return (
-                            data.distance <= 250 &&
-                            isFacingTarget(
-                                data.enemy,
-                                Math.PI / 3
-                            )
-                        );
-
-                    }
-                )
-
                 .sort(
                     (a, b) =>
-                        a.distance -
-                        b.distance
+                        a.distance - b.distance
                 )
-
-                .slice(
-                    0,
-                    maxTargets
-                );
+                .slice(0, maxTargets);
 
 
-        if (
-            targets.length > 0
-        ) {
+        if (targets.length > 0) {
 
             const multipliers = [
-
                 1.00,
                 0.80,
                 0.60,
@@ -2200,50 +1087,38 @@ function useSkill(key) {
                 0.30,
                 0.20,
                 0.10
-
             ];
 
 
-            targets.forEach(
-                (data, index) => {
+            targets.forEach((data, index) => {
 
-                    if (
-                        isProtectedByBossBarrier(
-                            data.enemy
-                        )
-                    ) {
-
-                        return;
-
-                    }
-
-
-                    data.enemy.hp -=
-                        skillDamage *
-                        multipliers[index];
-
+                if (
+                    isProtectedByBossBarrier(
+                        data.enemy
+                    )
+                ) {
+                    return;
                 }
-            );
+
+
+                data.enemy.hp -=
+                    skillDamage *
+                    multipliers[index];
+
+            });
 
 
             ricochetTargets =
-                targets.map(
-                    data =>
-                        data.enemy
-                );
+                targets.map(data => data.enemy);
 
-
-            ricochetTimer =
-                0.25;
+            ricochetTimer = 0.25;
 
         }
 
     }
 
 
-    /* =====================================================
-       R
-    ===================================================== */
+    /* R */
 
     if (key === "R") {
 
@@ -2252,58 +1127,40 @@ function useSkill(key) {
             getSkillBonusDamage();
 
 
-        enemies.forEach(
-            enemy => {
+        enemies.forEach(enemy => {
 
-                const distance =
-                    Math.hypot(
-                        enemy.x -
-                        player.x,
+            const distance =
+                Math.hypot(
+                    enemy.x - player.x,
+                    enemy.y - player.y
+                );
 
-                        enemy.y -
-                        player.y
-                    );
 
+            if (distance < 110) {
 
                 if (
-                    distance < 110
+                    isProtectedByBossBarrier(enemy)
                 ) {
-
-                    if (
-                        isProtectedByBossBarrier(
-                            enemy
-                        )
-                    ) {
-
-                        return;
-
-                    }
-
-
-                    enemy.hp -=
-                        skillDamage;
-
-
-                    enemy.stunTimer =
-                        0.3;
-
+                    return;
                 }
 
+
+                enemy.hp -= skillDamage;
+
+                enemy.stunTimer = 0.3;
+
             }
-        );
+
+        });
 
     }
 
 
-    /* =====================================================
-       T
-    ===================================================== */
+    /* T */
 
     if (key === "T") {
 
-        if (
-            enemies.length > 0
-        ) {
+        if (enemies.length > 0) {
 
             const totalDamage =
                 player.damage * 10 +
@@ -2311,35 +1168,26 @@ function useSkill(key) {
 
 
             const damagePerEnemy =
-                totalDamage /
-                enemies.length;
+                totalDamage / enemies.length;
 
 
-            enemies.forEach(
-                enemy => {
+            enemies.forEach(enemy => {
 
-                    if (
-                        isProtectedByBossBarrier(
-                            enemy
-                        )
-                    ) {
-
-                        return;
-
-                    }
-
-
-                    enemy.hp -=
-                        damagePerEnemy;
-
+                if (
+                    isProtectedByBossBarrier(enemy)
+                ) {
+                    return;
                 }
-            );
+
+
+                enemy.hp -= damagePerEnemy;
+
+            });
 
         }
 
 
-        ultimateFlashTimer =
-            0.35;
+        ultimateFlashTimer = 0.35;
 
     }
 
@@ -2347,347 +1195,236 @@ function useSkill(key) {
 
 
 /* =========================================================
-   REFILL
+   RESTORE
 ========================================================= */
 
 function useSpell() {
 
-    if (
-        !gameStarted ||
-        gamePaused
-    ) {
-
+    if (!gameStarted || gamePaused) {
         return;
+    }
 
+    if (spellCooldown > 0) {
+        return;
     }
 
 
-    if (
-        spellCooldown > 0
-    ) {
-
-        return;
-
-    }
-
-
-    player.hp =
-        player.maxHp;
-
-    player.mana =
-        player.maxMana;
-
-    player.energy =
-        player.maxEnergy;
-
-    player.hunger =
-        player.maxHunger;
+    player.hp = player.maxHp;
+    player.mana = player.maxMana;
+    player.energy = player.maxEnergy;
+    player.hunger = player.maxHunger;
 
 
     /*
-     * Refill also clears sprint
-     * exhaustion.
+     * Reaching 100% also unlocks sprint.
      */
 
-    sprintExhausted =
-        false;
+    player.sprintLocked = false;
+	player.blockLocked = false;
 
-
-    if (mobileSprint) {
-
-        mobileSprint.classList.remove(
-            "exhausted"
-        );
-
-    }
-
-
-    spellCooldown =
-        SPELL_COOLDOWN;
+    spellCooldown = SPELL_COOLDOWN;
 
 }
 
 
 /* =========================================================
-   BOSS PROTECTION
+   BOSS BARRIER
 ========================================================= */
 
-function isProtectedByBossBarrier(
-    enemy
-) {
+function isProtectedByBossBarrier(enemy) {
 
     const boss =
         enemies.find(
-            e =>
-                e.type === "boss"
+            e => e.type === "boss"
         );
 
 
-    if (!boss) {
+    if (!boss || !boss.barrierActive) {
         return false;
     }
 
-
-    if (
-        !boss.barrierActive
-    ) {
-
-        return false;
-
-    }
-
-
-    if (
-        enemy === boss
-    ) {
-
+    if (enemy === boss) {
         return true;
-
     }
 
 
     const distance =
         Math.hypot(
-            enemy.x -
-            boss.x,
-
-            enemy.y -
-            boss.y
+            enemy.x - boss.x,
+            enemy.y - boss.y
         );
 
 
-    return (
-        distance <=
-        boss.barrierRadius
-    );
+    return distance <= boss.barrierRadius;
 
 }
 
 
 /* =========================================================
-   UPDATE ENEMIES
+   ENEMIES
 ========================================================= */
 
 function updateEnemies(dt) {
 
-    enemies.forEach(
-        enemy => {
+    enemies.forEach(enemy => {
 
-            if (
-                enemy.stunTimer > 0
-            ) {
+        if (enemy.stunTimer > 0) {
 
-                enemy.stunTimer -=
+            enemy.stunTimer -= dt;
+
+            return;
+        }
+
+
+        if (enemy.type === "boss") {
+
+            updateBoss(enemy, dt);
+
+        }
+
+
+        const dx =
+            player.x - enemy.x;
+
+        const dy =
+            player.y - enemy.y;
+
+        const distance =
+            Math.hypot(dx, dy);
+
+
+        if (
+            distance >
+            enemy.attackRange
+        ) {
+
+            if (distance > 0) {
+
+                enemy.x +=
+                    dx / distance *
+                    enemy.speed *
                     dt;
 
-                return;
+                enemy.y +=
+                    dy / distance *
+                    enemy.speed *
+                    dt;
 
             }
 
+        }
 
-            if (
-                enemy.type === "boss"
-            ) {
+        else {
 
-                updateBoss(
-                    enemy,
-                    dt
-                );
-
-            }
+            enemy.attackTimer -= dt;
 
 
-            const dx =
-                player.x -
-                enemy.x;
+            if (enemy.attackTimer <= 0) {
 
-            const dy =
-                player.y -
-                enemy.y;
+                enemy.attackTimer =
+                    enemy.attackCooldown;
 
 
-            const distance =
-                Math.hypot(
-                    dx,
-                    dy
-                );
+                if (!player.blocking) {
 
-
-            if (
-                distance >
-                enemy.attackRange
-            ) {
-
-                if (
-                    distance > 0
-                ) {
-
-                    enemy.x +=
-                        dx /
-                        distance *
-                        enemy.speed *
-                        dt;
-
-
-                    enemy.y +=
-                        dy /
-                        distance *
-                        enemy.speed *
-                        dt;
+                    player.hp -= enemy.damage;
 
                 }
 
-            }
+                else {
 
-            else {
-
-                enemy.attackTimer -=
-                    dt;
-
-
-                if (
-                    enemy.attackTimer <= 0
-                ) {
-
-                    enemy.attackTimer =
-                        enemy.attackCooldown;
-
-
-                    if (
-                        !player.blocking
-                    ) {
-
-                        player.hp -=
-                            enemy.damage;
-
-                    }
-
-                    else {
-
-                        player.hp -=
-                            enemy.damage *
-                            0.25;
-
-                    }
+                    player.hp -=
+                        enemy.damage * 0.25;
 
                 }
 
             }
 
         }
-    );
 
+    });
 
-    /* =====================================================
-       REMOVE DEAD ENEMIES
-    ===================================================== */
 
     enemies =
-        enemies.filter(
-            enemy => {
+        enemies.filter(enemy => {
+
+            if (enemy.hp <= 0) {
+
+                enemiesDefeated++;
+
+                gainXP(25);
+
 
                 if (
-                    enemy.hp <= 0
+                    enemy.type !== "boss" &&
+                    Math.random() < 0.12
                 ) {
 
-                    /*
-                     * THIS is the actual
-                     * kill counter.
-                     */
-
-                    enemiesDefeated++;
-
-
-                    gainXP(25);
-
-
-                    if (
-                        enemy.type !== "boss" &&
-                        Math.random() < 0.12
-                    ) {
-
-                        dropFood(
-                            enemy.x,
-                            enemy.y,
-                            false
-                        );
-
-                    }
-
-
-                    if (
-                        enemy.type === "boss" &&
-                        Math.random() < 0.05
-                    ) {
-
-                        dropFood(
-                            enemy.x,
-                            enemy.y,
-                            true
-                        );
-
-                    }
-
-
-                    if (
-                        enemy.type === "boss"
-                    ) {
-
-                        nextBossSpawn =
-                            enemiesDefeated +
-                            randomInt(
-                                50,
-                                80
-                            );
-
-                    }
-
-
-                    return false;
+                    dropFood(
+                        enemy.x,
+                        enemy.y,
+                        false
+                    );
 
                 }
 
 
-                return true;
+                if (
+                    enemy.type === "boss" &&
+                    Math.random() < 0.05
+                ) {
+
+                    dropFood(
+                        enemy.x,
+                        enemy.y,
+                        true
+                    );
+
+                }
+
+
+                if (enemy.type === "boss") {
+
+                    nextBossSpawn =
+                        enemiesDefeated +
+                        randomInt(50, 80);
+
+                }
+
+
+                return false;
 
             }
-        );
+
+
+            return true;
+
+        });
 
 }
 
 
 /* =========================================================
-   BOSS UPDATE
+   BOSS
 ========================================================= */
 
-function updateBoss(
-    boss,
-    dt
-) {
+function updateBoss(boss, dt) {
 
-    if (
-        boss.groundSkillWarning
-    ) {
+    if (boss.groundSkillWarning) {
 
-        boss.groundSkillWarningTime -=
-            dt;
+        boss.groundSkillWarningTime -= dt;
 
 
         if (
             boss.groundSkillWarningTime <= 0
         ) {
 
-            boss.groundSkillWarning =
-                false;
-
+            boss.groundSkillWarning = false;
 
             boss.groundSkillTimer =
                 boss.groundSkillCooldown;
 
-
-            bossGroundSmash(
-                boss
-            );
+            bossGroundSmash(boss);
 
         }
 
@@ -2695,60 +1432,41 @@ function updateBoss(
 
     else {
 
-        boss.groundSkillTimer -=
-            dt;
+        boss.groundSkillTimer -= dt;
 
 
-        if (
-            boss.groundSkillTimer <= 0
-        ) {
+        if (boss.groundSkillTimer <= 0) {
 
-            boss.groundSkillX =
-                player.x;
-
-
-            boss.groundSkillY =
-                player.y;
+            boss.groundSkillX = player.x;
+            boss.groundSkillY = player.y;
 
 
             boss.groundSkillAngle =
                 Math.atan2(
-                    boss.groundSkillY -
-                    boss.y,
-
-                    boss.groundSkillX -
-                    boss.x
+                    boss.groundSkillY - boss.y,
+                    boss.groundSkillX - boss.x
                 );
 
 
-            boss.groundSkillWarning =
-                true;
+            boss.groundSkillWarning = true;
 
-
-            boss.groundSkillWarningTime =
-                1.5;
+            boss.groundSkillWarningTime = 1.5;
 
         }
 
     }
 
 
-    /* BARRIER */
+    if (boss.barrierActive) {
 
-    if (
-        boss.barrierActive
-    ) {
-
-        boss.barrierTimeRemaining -=
-            dt;
+        boss.barrierTimeRemaining -= dt;
 
 
         if (
             boss.barrierTimeRemaining <= 0
         ) {
 
-            boss.barrierActive =
-                false;
+            boss.barrierActive = false;
 
         }
 
@@ -2756,21 +1474,15 @@ function updateBoss(
 
     else {
 
-        boss.barrierTimer -=
-            dt;
+        boss.barrierTimer -= dt;
 
 
-        if (
-            boss.barrierTimer <= 0
-        ) {
+        if (boss.barrierTimer <= 0) {
 
             boss.barrierTimer =
                 boss.barrierCooldown;
 
-
-            boss.barrierActive =
-                true;
-
+            boss.barrierActive = true;
 
             boss.barrierTimeRemaining =
                 boss.barrierDuration;
@@ -2783,67 +1495,48 @@ function updateBoss(
 
 
 /* =========================================================
-   BOSS GROUND SMASH
+   BOSS CRACK
 ========================================================= */
 
-function bossGroundSmash(
-    boss
-) {
+function bossGroundSmash(boss) {
 
     const angle =
         boss.groundSkillAngle;
 
+    const crackLength = 280;
 
-    const crackLength =
-        280;
-
-
-    const crack = {
+    bossCracks.push({
 
         x: boss.x,
-
         y: boss.y,
 
         angle,
 
-        length:
-            crackLength,
+        length: crackLength,
 
         width: 28,
 
         timer: 0.9
 
-    };
-
-
-    bossCracks.push(
-        crack
-    );
+    });
 
 
     const px =
-        player.x -
-        boss.x;
-
+        player.x - boss.x;
 
     const py =
-        player.y -
-        boss.y;
+        player.y - boss.y;
 
 
     const forward =
-        px *
-        Math.cos(angle) +
-        py *
-        Math.sin(angle);
+        px * Math.cos(angle) +
+        py * Math.sin(angle);
 
 
     const perpendicular =
         Math.abs(
-            -px *
-            Math.sin(angle) +
-            py *
-            Math.cos(angle)
+            -px * Math.sin(angle) +
+            py * Math.cos(angle)
         );
 
 
@@ -2851,12 +1544,12 @@ function bossGroundSmash(
         forward >= 0 &&
         forward <= crackLength &&
         perpendicular <=
-            crack.width / 2 +
+            crackLength * 0 +
+            14 +
             player.size / 2
     ) {
 
-        playerStunTimer =
-            0.7;
+        playerStunTimer = 0.7;
 
     }
 
@@ -2869,57 +1562,39 @@ function bossGroundSmash(
 
 function gainXP(amount) {
 
-    player.xp +=
-        amount;
+    player.xp += amount;
 
 
     while (
-        player.xp >=
-        player.xpNeeded
+        player.xp >= player.xpNeeded
     ) {
 
-        player.xp -=
-            player.xpNeeded;
-
+        player.xp -= player.xpNeeded;
 
         player.level++;
 
 
         player.xpNeeded =
             Math.floor(
-                player.xpNeeded *
-                1.4
+                player.xpNeeded * 1.4
             );
 
 
-        player.maxHp +=
-            10;
-
-        player.hp =
-            player.maxHp;
+        player.maxHp += 10;
+        player.hp = player.maxHp;
 
 
-        player.maxMana +=
-            10;
-
-        player.mana =
-            player.maxMana;
+        player.maxMana += 10;
+        player.mana = player.maxMana;
 
 
-        player.damage +=
-            3;
+        player.damage += 3;
 
+        player.speed += 0.011;
 
-        player.speed +=
-            0.011;
+        player.attackSpeed += 0.003;
 
-
-        player.attackSpeed +=
-            0.003;
-
-
-        player.skillDamageBonus +=
-            3.5;
+        player.skillDamageBonus += 3.5;
 
 
         updateSkillManaCosts();
@@ -2935,30 +1610,20 @@ function gainXP(amount) {
 
 function updateStats(dt) {
 
-    if (
-        playerStunTimer > 0
-    ) {
+    if (playerStunTimer > 0) {
 
-        playerStunTimer -=
-            dt;
+        playerStunTimer -= dt;
 
     }
 
 
-    player.hunger -=
-        1 * dt;
-
+    player.hunger -= dt;
 
     player.hunger =
-        Math.max(
-            0,
-            player.hunger
-        );
+        Math.max(0, player.hunger);
 
 
-    player.mana +=
-        8 * dt;
-
+    player.mana += 8 * dt;
 
     player.mana =
         Math.min(
@@ -2967,13 +1632,9 @@ function updateStats(dt) {
         );
 
 
-    if (
-        spellCooldown > 0
-    ) {
+    if (spellCooldown > 0) {
 
-        spellCooldown -=
-            dt;
-
+        spellCooldown -= dt;
 
         spellCooldown =
             Math.max(
@@ -2984,12 +1645,9 @@ function updateStats(dt) {
     }
 
 
-    if (
-        player.hunger <= 0
-    ) {
+    if (player.hunger <= 0) {
 
-        player.hp -=
-            2 * dt;
+        player.hp -= 2 * dt;
 
     }
 
@@ -3005,59 +1663,45 @@ function updateCooldowns(dt) {
     attackTimer =
         Math.max(
             0,
-            attackTimer -
-            dt
+            attackTimer - dt
         );
 
 
-    for (
-        const key in skills
-    ) {
+    for (const key in skills) {
 
         skills[key].timer =
             Math.max(
                 0,
-                skills[key].timer -
-                dt
+                skills[key].timer - dt
             );
 
     }
 
 
-    if (
-        ricochetTimer > 0
-    ) {
+    if (ricochetTimer > 0) {
 
-        ricochetTimer -=
-            dt;
+        ricochetTimer -= dt;
 
     }
 
 
-    if (
-        ultimateFlashTimer > 0
-    ) {
+    if (ultimateFlashTimer > 0) {
 
-        ultimateFlashTimer -=
-            dt;
+        ultimateFlashTimer -= dt;
 
     }
 
 
-    bossCracks.forEach(
-        crack => {
+    bossCracks.forEach(crack => {
 
-            crack.timer -=
-                dt;
+        crack.timer -= dt;
 
-        }
-    );
+    });
 
 
     bossCracks =
         bossCracks.filter(
-            crack =>
-                crack.timer > 0
+            crack => crack.timer > 0
         );
 
 }
@@ -3069,18 +1713,14 @@ function updateCooldowns(dt) {
 
 function updateSpawning(dt) {
 
-    spawnTimer -=
-        dt;
+    spawnTimer -= dt;
 
 
     const spawnInterval =
         Math.max(
             0.45,
             2 -
-            (
-                (player.level - 1) *
-                0.12
-            )
+            ((player.level - 1) * 0.12)
         );
 
 
@@ -3091,39 +1731,29 @@ function updateSpawning(dt) {
 
         spawnEnemy();
 
-
-        spawnTimer =
-            spawnInterval;
+        spawnTimer = spawnInterval;
 
     }
 
 
     if (
-        enemiesDefeated >=
-        nextBossSpawn
+        enemiesDefeated >= nextBossSpawn
     ) {
 
         const bossAlreadyAlive =
             enemies.some(
                 enemy =>
-                    enemy.type ===
-                    "boss"
+                    enemy.type === "boss"
             );
 
 
-        if (
-            !bossAlreadyAlive
-        ) {
+        if (!bossAlreadyAlive) {
 
             spawnEnemy(true);
 
-
             nextBossSpawn =
                 enemiesDefeated +
-                randomInt(
-                    50,
-                    80
-                );
+                randomInt(50, 80);
 
         }
 
@@ -3136,11 +1766,7 @@ function updateSpawning(dt) {
    FOOD
 ========================================================= */
 
-function dropFood(
-    x,
-    y,
-    fullRestore
-) {
+function dropFood(x, y, fullRestore) {
 
     foods.push({
 
@@ -3149,8 +1775,7 @@ function dropFood(
 
         size: 14,
 
-        timer:
-            FOOD_LIFETIME,
+        timer: FOOD_LIFETIME,
 
         fullRestore
 
@@ -3161,66 +1786,51 @@ function dropFood(
 
 function updateFood(dt) {
 
-    foods.forEach(
-        food => {
+    foods.forEach(food => {
 
-            food.timer -=
-                dt;
+        food.timer -= dt;
 
 
-            const distance =
-                Math.hypot(
-                    food.x -
-                    player.x,
-
-                    food.y -
-                    player.y
-                );
+        const distance =
+            Math.hypot(
+                food.x - player.x,
+                food.y - player.y
+            );
 
 
-            if (
-                distance <=
-                player.size +
-                food.size
-            ) {
+        if (
+            distance <=
+            player.size + food.size
+        ) {
 
-                if (
-                    food.fullRestore
-                ) {
+            if (food.fullRestore) {
 
-                    player.hunger =
-                        player.maxHunger;
-
-                }
-
-                else {
-
-                    player.hunger +=
-                        25;
-
-
-                    player.hunger =
-                        Math.min(
-                            player.maxHunger,
-                            player.hunger
-                        );
-
-                }
-
-
-                food.timer =
-                    0;
+                player.hunger =
+                    player.maxHunger;
 
             }
 
+            else {
+
+                player.hunger =
+                    Math.min(
+                        player.maxHunger,
+                        player.hunger + 25
+                    );
+
+            }
+
+
+            food.timer = 0;
+
         }
-    );
+
+    });
 
 
     foods =
         foods.filter(
-            food =>
-                food.timer > 0
+            food => food.timer > 0
         );
 
 }
@@ -3238,20 +1848,17 @@ function updateHUD() {
         player.maxHp
     );
 
-
     setBar(
         "manaBar",
         player.mana,
         player.maxMana
     );
 
-
     setBar(
         "hungerBar",
         player.hunger,
         player.maxHunger
     );
-
 
     setBar(
         "energyBar",
@@ -3265,73 +1872,50 @@ function updateHUD() {
         `${Math.ceil(player.hp)} / ${player.maxHp}`
     );
 
-
     setText(
         "manaText",
         `${Math.ceil(player.mana)} / ${player.maxMana}`
     );
-
 
     setText(
         "hungerText",
         `${Math.ceil(player.hunger)} / ${player.maxHunger}`
     );
 
-
     setText(
         "energyText",
         `${Math.ceil(player.energy)} / ${player.maxEnergy}`
     );
-
 
     setText(
         "levelText",
         player.level
     );
 
-
     setText(
         "xpText",
         `${Math.floor(player.xp)} / ${player.xpNeeded}`
     );
 
-
-    /*
-     * IMPORTANT:
-     *
-     * enemyCount now represents
-     * enemies killed, NOT enemies alive.
-     */
-
     setText(
         "enemyCount",
-        enemiesDefeated
+        enemies.length
     );
 
 
-    /* REFILL UI */
-
     const spellCooldownElement =
-        document.getElementById(
-            "spellCooldown"
-        );
+        document.getElementById("spellCooldown");
 
 
-    if (
-        spellCooldownElement
-    ) {
+    if (spellCooldownElement) {
 
-        if (
-            spellCooldown > 0
-        ) {
+        if (spellCooldown > 0) {
 
             spellCooldownElement.style.display =
                 "flex";
 
             spellCooldownElement.textContent =
-                Math.ceil(
-                    spellCooldown
-                );
+                Math.ceil(spellCooldown);
 
         }
 
@@ -3345,123 +1929,32 @@ function updateHUD() {
     }
 
 
-    const refillText =
-        document.getElementById(
-            "mobileRefillText"
-        );
-
-
-    if (refillText) {
-
-        if (
-            spellCooldown > 0
-        ) {
-
-            refillText.textContent =
-                Math.ceil(
-                    spellCooldown
-                ) + "s";
-
-            mobileRefill.classList.add(
-                "cooldown"
-            );
-
-        }
-
-        else {
-
-            refillText.textContent =
-                "REFILL";
-
-            mobileRefill.classList.remove(
-                "cooldown"
-            );
-
-        }
-
-    }
-
-
-    /* SPACE HINT */
-
-    const refillHintText =
-        document.getElementById(
-            "refillHintText"
-        );
-
-
-    if (refillHintText) {
-
-        if (
-            spellCooldown > 0
-        ) {
-
-            refillHintText.textContent =
-                Math.ceil(
-                    spellCooldown
-                ) + "s";
-
-        }
-
-        else {
-
-            refillHintText.textContent =
-                "READY";
-
-        }
-
-    }
-
-
     updateSkillUI();
 
 }
 
 
-/* =========================================================
-   SET TEXT
-========================================================= */
-
-function setText(
-    id,
-    value
-) {
+function setText(id, value) {
 
     const element =
         document.getElementById(id);
 
-
     if (element) {
 
-        element.textContent =
-            value;
+        element.textContent = value;
 
     }
 
 }
 
 
-/* =========================================================
-   SET BAR
-========================================================= */
-
-function setBar(
-    id,
-    value,
-    max
-) {
+function setBar(id, value, max) {
 
     const element =
         document.getElementById(id);
 
-
-    if (
-        !element ||
-        max <= 0
-    ) {
-
+    if (!element || max <= 0) {
         return;
-
     }
 
 
@@ -3470,9 +1963,7 @@ function setBar(
             0,
             Math.min(
                 100,
-                value /
-                max *
-                100
+                value / max * 100
             )
         );
 
@@ -3489,13 +1980,20 @@ function setBar(
 
 function updateSkillUI() {
 
-    for (
-        const key in skills
-    ) {
+    for (const key in skills) {
 
-        const skill =
-            skills[key];
+        const skill = skills[key];
 
+	const cost =
+		document.getElementById(
+			key.toLowerCase() +
+"Cost"
+		);
+
+	if (cost) {
+		cost.textContent =
+skill.mana + " MANA";
+		}
 
         const cooldown =
             document.getElementById(
@@ -3506,17 +2004,13 @@ function updateSkillUI() {
 
         if (cooldown) {
 
-            if (
-                skill.timer > 0
-            ) {
+            if (skill.timer > 0) {
 
                 cooldown.style.display =
                     "flex";
 
                 cooldown.textContent =
-                    skill.timer.toFixed(
-                        1
-                    );
+                    skill.timer.toFixed(1);
 
             }
 
@@ -3526,86 +2020,6 @@ function updateSkillUI() {
                     "none";
 
             }
-
-        }
-
-
-        const mobileCooldown =
-            document.getElementById(
-                "mobile" +
-                key +
-                "Cooldown"
-            );
-
-
-        if (
-            mobileCooldown
-        ) {
-
-            if (
-                skill.timer > 0
-            ) {
-
-                mobileCooldown.style.display =
-                    "flex";
-
-                mobileCooldown.textContent =
-                    skill.timer.toFixed(
-                        1
-                    );
-
-            }
-
-            else {
-
-                mobileCooldown.style.display =
-                    "none";
-
-            }
-
-        }
-
-
-        const manaElement =
-            document.getElementById(
-                key.toLowerCase() +
-                "Mana"
-            );
-
-
-        if (
-            manaElement
-        ) {
-
-            manaElement.textContent =
-                skill.mana;
-
-        }
-
-    }
-
-
-    /*
-     * Mobile sprint button state.
-     */
-
-    if (mobileSprint) {
-
-        if (
-            sprintExhausted
-        ) {
-
-            mobileSprint.classList.add(
-                "exhausted"
-            );
-
-        }
-
-        else {
-
-            mobileSprint.classList.remove(
-                "exhausted"
-            );
 
         }
 
@@ -3615,14 +2029,12 @@ function updateSkillUI() {
 
 
 /* =========================================================
-   DRAW MAP
+   MAP
 ========================================================= */
 
 function drawMap() {
 
-    ctx.fillStyle =
-        "#4b8c4b";
-
+    ctx.fillStyle = "#4b8c4b";
 
     ctx.fillRect(
         0,
@@ -3634,7 +2046,6 @@ function drawMap() {
 
     ctx.strokeStyle =
         "rgba(0,0,0,.08)";
-
 
     ctx.lineWidth = 1;
 
@@ -3666,12 +2077,9 @@ function drawMap() {
     }
 
 
-    ctx.strokeStyle =
-        "#263b26";
-
+    ctx.strokeStyle = "#263b26";
 
     ctx.lineWidth = 8;
-
 
     ctx.strokeRect(
         4,
@@ -3684,13 +2092,12 @@ function drawMap() {
 
 
 /* =========================================================
-   DRAW PLAYER
+   PLAYER
 ========================================================= */
 
 function drawPlayer() {
 
     ctx.save();
-
 
     ctx.translate(
         player.x,
@@ -3698,9 +2105,7 @@ function drawPlayer() {
     );
 
 
-    ctx.fillStyle =
-        "#287cff";
-
+    ctx.fillStyle = "#287cff";
 
     ctx.fillRect(
         -player.size / 2,
@@ -3711,23 +2116,16 @@ function drawPlayer() {
 
 
     const eyeForwardX =
-        Math.cos(
-            player.facing
-        ) * 5;
-
+        Math.cos(player.facing) * 5;
 
     const eyeForwardY =
-        Math.sin(
-            player.facing
-        ) * 5;
-
+        Math.sin(player.facing) * 5;
 
     const eyeSideX =
         Math.cos(
             player.facing +
             Math.PI / 2
         ) * 4;
-
 
     const eyeSideY =
         Math.sin(
@@ -3736,21 +2134,15 @@ function drawPlayer() {
         ) * 4;
 
 
-    ctx.fillStyle =
-        "white";
+    ctx.fillStyle = "white";
 
 
     ctx.beginPath();
 
     ctx.arc(
-        eyeForwardX +
-        eyeSideX,
-
-        eyeForwardY +
-        eyeSideY,
-
+        eyeForwardX + eyeSideX,
+        eyeForwardY + eyeSideY,
         3.5,
-
         0,
         Math.PI * 2
     );
@@ -3761,14 +2153,9 @@ function drawPlayer() {
     ctx.beginPath();
 
     ctx.arc(
-        eyeForwardX -
-        eyeSideX,
-
-        eyeForwardY -
-        eyeSideY,
-
+        eyeForwardX - eyeSideX,
+        eyeForwardY - eyeSideY,
         3.5,
-
         0,
         Math.PI * 2
     );
@@ -3776,8 +2163,7 @@ function drawPlayer() {
     ctx.fill();
 
 
-    ctx.fillStyle =
-        "#111";
+    ctx.fillStyle = "#111";
 
 
     ctx.beginPath();
@@ -3785,13 +2171,11 @@ function drawPlayer() {
     ctx.arc(
         eyeForwardX +
         eyeSideX +
-        Math.cos(player.facing) *
-        1.5,
+        Math.cos(player.facing) * 1.5,
 
         eyeForwardY +
         eyeSideY +
-        Math.sin(player.facing) *
-        1.5,
+        Math.sin(player.facing) * 1.5,
 
         1.5,
 
@@ -3807,13 +2191,11 @@ function drawPlayer() {
     ctx.arc(
         eyeForwardX -
         eyeSideX +
-        Math.cos(player.facing) *
-        1.5,
+        Math.cos(player.facing) * 1.5,
 
         eyeForwardY -
         eyeSideY +
-        Math.sin(player.facing) *
-        1.5,
+        Math.sin(player.facing) * 1.5,
 
         1.5,
 
@@ -3824,14 +2206,9 @@ function drawPlayer() {
     ctx.fill();
 
 
-    /* SHIELD */
+    if (player.blocking) {
 
-    if (
-        player.blocking
-    ) {
-
-        ctx.strokeStyle =
-            "#77c8ff";
+        ctx.strokeStyle = "#77c8ff";
 
         ctx.lineWidth = 6;
 
@@ -3842,12 +2219,8 @@ function drawPlayer() {
             0,
             0,
             28,
-
-            player.facing -
-            0.8,
-
-            player.facing +
-            0.8
+            player.facing - 0.8,
+            player.facing + 0.8
         );
 
         ctx.stroke();
@@ -3855,14 +2228,9 @@ function drawPlayer() {
     }
 
 
-    /* STUN */
+    if (playerStunTimer > 0) {
 
-    if (
-        playerStunTimer > 0
-    ) {
-
-        ctx.strokeStyle =
-            "#ffff00";
+        ctx.strokeStyle = "#ffff00";
 
         ctx.lineWidth = 3;
 
@@ -3873,7 +2241,6 @@ function drawPlayer() {
             0,
             0,
             34,
-
             0,
             Math.PI * 2
         );
@@ -3889,483 +2256,362 @@ function drawPlayer() {
 
 
 /* =========================================================
-   DRAW ENEMIES
+   ENEMIES
 ========================================================= */
 
 function drawEnemies() {
 
-    enemies.forEach(
-        enemy => {
+    enemies.forEach(enemy => {
 
-            if (
-                enemy.type === "normal"
-            ) {
+        if (enemy.type === "normal") {
 
-                ctx.fillStyle =
-                    "#e33434";
-
-
-                ctx.fillRect(
-                    enemy.x -
-                    enemy.size / 2,
-
-                    enemy.y -
-                    enemy.size / 2,
-
-                    enemy.size,
-                    enemy.size
-                );
-
-            }
-
-
-            if (
-                enemy.type === "tank"
-            ) {
-
-                ctx.fillStyle =
-                    "#8b2020";
-
-
-                ctx.fillRect(
-                    enemy.x -
-                    enemy.size / 2,
-
-                    enemy.y -
-                    enemy.size / 2,
-
-                    enemy.size,
-                    enemy.size
-                );
-
-
-                ctx.strokeStyle =
-                    "#ff7777";
-
-                ctx.lineWidth = 3;
-
-
-                ctx.strokeRect(
-                    enemy.x -
-                    enemy.size / 2 +
-                    3,
-
-                    enemy.y -
-                    enemy.size / 2 +
-                    3,
-
-                    enemy.size - 6,
-
-                    enemy.size - 6
-                );
-
-            }
-
-
-            if (
-                enemy.type === "ranged"
-            ) {
-
-                ctx.fillStyle =
-                    "#f28c28";
-
-
-                ctx.beginPath();
-
-
-                ctx.moveTo(
-                    enemy.x,
-
-                    enemy.y -
-                    enemy.size / 2
-                );
-
-
-                ctx.lineTo(
-                    enemy.x +
-                    enemy.size / 2,
-
-                    enemy.y
-                );
-
-
-                ctx.lineTo(
-                    enemy.x,
-
-                    enemy.y +
-                    enemy.size / 2
-                );
-
-
-                ctx.lineTo(
-                    enemy.x -
-                    enemy.size / 2,
-
-                    enemy.y
-                );
-
-
-                ctx.closePath();
-
-                ctx.fill();
-
-            }
-
-
-            /* BOSS */
-
-            if (
-                enemy.type === "boss"
-            ) {
-
-                ctx.save();
-
-
-                ctx.translate(
-                    enemy.x,
-                    enemy.y
-                );
-
-
-                ctx.fillStyle =
-                    "#8e44ad";
-
-
-                ctx.beginPath();
-
-
-                ctx.moveTo(
-                    0,
-                    -enemy.size / 2
-                );
-
-
-                ctx.lineTo(
-                    enemy.size / 2,
-                    0
-                );
-
-
-                ctx.lineTo(
-                    0,
-                    enemy.size / 2
-                );
-
-
-                ctx.lineTo(
-                    -enemy.size / 2,
-                    0
-                );
-
-
-                ctx.closePath();
-
-                ctx.fill();
-
-
-                ctx.strokeStyle =
-                    "#d98cff";
-
-                ctx.lineWidth = 3;
-
-                ctx.stroke();
-
-
-                ctx.restore();
-
-            }
-
-
-            /* EYES */
-
-            const angle =
-                Math.atan2(
-                    player.y -
-                    enemy.y,
-
-                    player.x -
-                    enemy.x
-                );
-
-
-            const eyeX =
-                Math.cos(angle) * 5;
-
-
-            const eyeY =
-                Math.sin(angle) * 5;
-
-
-            const sideX =
-                Math.cos(
-                    angle +
-                    Math.PI / 2
-                ) * 4;
-
-
-            const sideY =
-                Math.sin(
-                    angle +
-                    Math.PI / 2
-                ) * 4;
-
-
-            const eyeSize =
-                enemy.type === "boss"
-                    ? 4
-                    : 3;
-
-
-            ctx.fillStyle =
-                "white";
-
-
-            ctx.beginPath();
-
-            ctx.arc(
-                enemy.x +
-                eyeX +
-                sideX,
-
-                enemy.y +
-                eyeY +
-                sideY,
-
-                eyeSize,
-
-                0,
-                Math.PI * 2
-            );
-
-            ctx.fill();
-
-
-            ctx.beginPath();
-
-            ctx.arc(
-                enemy.x +
-                eyeX -
-                sideX,
-
-                enemy.y +
-                eyeY -
-                sideY,
-
-                eyeSize,
-
-                0,
-                Math.PI * 2
-            );
-
-            ctx.fill();
-
-
-            ctx.fillStyle =
-                "#111";
-
-
-            const pupilSize =
-                enemy.type === "boss"
-                    ? 2
-                    : 1.5;
-
-
-            ctx.beginPath();
-
-            ctx.arc(
-                enemy.x +
-                eyeX +
-                sideX +
-                Math.cos(angle) *
-                1.5,
-
-                enemy.y +
-                eyeY +
-                sideY +
-                Math.sin(angle) *
-                1.5,
-
-                pupilSize,
-
-                0,
-                Math.PI * 2
-            );
-
-            ctx.fill();
-
-
-            ctx.beginPath();
-
-            ctx.arc(
-                enemy.x +
-                eyeX -
-                sideX +
-                Math.cos(angle) *
-                1.5,
-
-                enemy.y +
-                eyeY -
-                sideY +
-                Math.sin(angle) *
-                1.5,
-
-                pupilSize,
-
-                0,
-                Math.PI * 2
-            );
-
-            ctx.fill();
-
-
-            /* BOSS WARNING */
-
-            if (
-                enemy.type === "boss" &&
-                enemy.groundSkillWarning
-            ) {
-
-                const warningAlpha =
-                    0.35 +
-                    Math.sin(
-                        performance.now() /
-                        100
-                    ) *
-                    0.20;
-
-
-                ctx.save();
-
-
-                ctx.translate(
-                    enemy.x,
-                    enemy.y
-                );
-
-
-                ctx.rotate(
-                    enemy.groundSkillAngle
-                );
-
-
-                ctx.strokeStyle =
-                    `rgba(
-                        255,
-                        80,
-                        80,
-                        ${warningAlpha}
-                    )`;
-
-
-                ctx.lineWidth = 12;
-
-
-                ctx.setLineDash([
-                    15,
-                    10
-                ]);
-
-
-                ctx.beginPath();
-
-
-                ctx.moveTo(
-                    0,
-                    0
-                );
-
-
-                ctx.lineTo(
-                    280,
-                    0
-                );
-
-
-                ctx.stroke();
-
-
-                ctx.setLineDash([]);
-
-
-                ctx.restore();
-
-            }
-
-
-            /* BARRIER */
-
-            if (
-                enemy.type === "boss" &&
-                enemy.barrierActive
-            ) {
-
-                ctx.strokeStyle =
-                    "#b56cff";
-
-                ctx.lineWidth = 5;
-
-
-                ctx.beginPath();
-
-
-                ctx.arc(
-                    enemy.x,
-                    enemy.y,
-                    enemy.barrierRadius,
-
-                    0,
-                    Math.PI * 2
-                );
-
-
-                ctx.stroke();
-
-            }
-
-
-            /* HEALTH BAR */
-
-            ctx.fillStyle =
-                "#111";
-
+            ctx.fillStyle = "#e33434";
 
             ctx.fillRect(
-                enemy.x - 20,
-
-                enemy.y -
-                enemy.size / 2 -
-                10,
-
-                40,
-                5
-            );
-
-
-            ctx.fillStyle =
-                enemy.type === "boss"
-                    ? "#b45cff"
-                    : "#ff5555";
-
-
-            ctx.fillRect(
-                enemy.x - 20,
-
-                enemy.y -
-                enemy.size / 2 -
-                10,
-
-                40 *
-                Math.max(
-                    0,
-                    enemy.hp /
-                    enemy.maxHp
-                ),
-
-                5
+                enemy.x - enemy.size / 2,
+                enemy.y - enemy.size / 2,
+                enemy.size,
+                enemy.size
             );
 
         }
-    );
+
+
+        if (enemy.type === "tank") {
+
+            ctx.fillStyle = "#8b2020";
+
+            ctx.fillRect(
+                enemy.x - enemy.size / 2,
+                enemy.y - enemy.size / 2,
+                enemy.size,
+                enemy.size
+            );
+
+
+            ctx.strokeStyle = "#ff7777";
+
+            ctx.lineWidth = 3;
+
+            ctx.strokeRect(
+                enemy.x - enemy.size / 2 + 3,
+                enemy.y - enemy.size / 2 + 3,
+                enemy.size - 6,
+                enemy.size - 6
+            );
+
+        }
+
+
+        if (enemy.type === "ranged") {
+
+            ctx.fillStyle = "#f28c28";
+
+            ctx.beginPath();
+
+            ctx.moveTo(
+                enemy.x,
+                enemy.y - enemy.size / 2
+            );
+
+            ctx.lineTo(
+                enemy.x + enemy.size / 2,
+                enemy.y
+            );
+
+            ctx.lineTo(
+                enemy.x,
+                enemy.y + enemy.size / 2
+            );
+
+            ctx.lineTo(
+                enemy.x - enemy.size / 2,
+                enemy.y
+            );
+
+            ctx.closePath();
+
+            ctx.fill();
+
+        }
+
+
+        if (enemy.type === "boss") {
+
+            ctx.save();
+
+            ctx.translate(
+                enemy.x,
+                enemy.y
+            );
+
+
+            ctx.fillStyle = "#8e44ad";
+
+            ctx.beginPath();
+
+            ctx.moveTo(
+                0,
+                -enemy.size / 2
+            );
+
+            ctx.lineTo(
+                enemy.size / 2,
+                0
+            );
+
+            ctx.lineTo(
+                0,
+                enemy.size / 2
+            );
+
+            ctx.lineTo(
+                -enemy.size / 2,
+                0
+            );
+
+            ctx.closePath();
+
+            ctx.fill();
+
+
+            ctx.strokeStyle = "#d98cff";
+
+            ctx.lineWidth = 3;
+
+            ctx.stroke();
+
+
+            ctx.restore();
+
+        }
+
+
+        /* EYES */
+
+        const angle =
+            Math.atan2(
+                player.y - enemy.y,
+                player.x - enemy.x
+            );
+
+
+        const eyeX =
+            Math.cos(angle) * 5;
+
+        const eyeY =
+            Math.sin(angle) * 5;
+
+        const sideX =
+            Math.cos(
+                angle +
+                Math.PI / 2
+            ) * 4;
+
+        const sideY =
+            Math.sin(
+                angle +
+                Math.PI / 2
+            ) * 4;
+
+
+        const eyeSize =
+            enemy.type === "boss"
+                ? 4
+                : 3;
+
+
+        ctx.fillStyle = "white";
+
+
+        ctx.beginPath();
+
+        ctx.arc(
+            enemy.x + eyeX + sideX,
+            enemy.y + eyeY + sideY,
+            eyeSize,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.fill();
+
+
+        ctx.beginPath();
+
+        ctx.arc(
+            enemy.x + eyeX - sideX,
+            enemy.y + eyeY - sideY,
+            eyeSize,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.fill();
+
+
+        ctx.fillStyle = "#111";
+
+
+        const pupilSize =
+            enemy.type === "boss"
+                ? 2
+                : 1.5;
+
+
+        ctx.beginPath();
+
+        ctx.arc(
+            enemy.x +
+            eyeX +
+            sideX +
+            Math.cos(angle) * 1.5,
+
+            enemy.y +
+            eyeY +
+            sideY +
+            Math.sin(angle) * 1.5,
+
+            pupilSize,
+
+            0,
+            Math.PI * 2
+        );
+
+        ctx.fill();
+
+
+        ctx.beginPath();
+
+        ctx.arc(
+            enemy.x +
+            eyeX -
+            sideX +
+            Math.cos(angle) * 1.5,
+
+            enemy.y +
+            eyeY -
+            sideY +
+            Math.sin(angle) * 1.5,
+
+            pupilSize,
+
+            0,
+            Math.PI * 2
+        );
+
+        ctx.fill();
+
+
+        /* BOSS WARNING */
+
+        if (
+            enemy.type === "boss" &&
+            enemy.groundSkillWarning
+        ) {
+
+            const warningAlpha =
+                0.35 +
+                Math.sin(
+                    performance.now() / 100
+                ) * 0.20;
+
+
+            ctx.save();
+
+            ctx.translate(
+                enemy.x,
+                enemy.y
+            );
+
+            ctx.rotate(
+                enemy.groundSkillAngle
+            );
+
+
+            ctx.strokeStyle =
+                `rgba(255,80,80,${warningAlpha})`;
+
+            ctx.lineWidth = 12;
+
+            ctx.setLineDash([
+                15,
+                10
+            ]);
+
+
+            ctx.beginPath();
+
+            ctx.moveTo(0, 0);
+
+            ctx.lineTo(280, 0);
+
+            ctx.stroke();
+
+            ctx.setLineDash([]);
+
+            ctx.restore();
+
+        }
+
+
+        /* BARRIER */
+
+        if (
+            enemy.type === "boss" &&
+            enemy.barrierActive
+        ) {
+
+            ctx.strokeStyle = "#b56cff";
+
+            ctx.lineWidth = 5;
+
+
+            ctx.beginPath();
+
+            ctx.arc(
+                enemy.x,
+                enemy.y,
+                enemy.barrierRadius,
+                0,
+                Math.PI * 2
+            );
+
+            ctx.stroke();
+
+        }
+
+
+        /* HEALTH BAR */
+
+        ctx.fillStyle = "#111";
+
+        ctx.fillRect(
+            enemy.x - 20,
+            enemy.y - enemy.size / 2 - 10,
+            40,
+            5
+        );
+
+
+        ctx.fillStyle =
+            enemy.type === "boss"
+                ? "#b45cff"
+                : "#ff5555";
+
+
+        ctx.fillRect(
+            enemy.x - 20,
+            enemy.y - enemy.size / 2 - 10,
+            40 *
+            Math.max(
+                0,
+                enemy.hp / enemy.maxHp
+            ),
+            5
+        );
+
+    });
 
 }
 
@@ -4376,54 +2622,44 @@ function drawEnemies() {
 
 function drawFood() {
 
-    foods.forEach(
-        food => {
+    foods.forEach(food => {
 
-            const alpha =
-                Math.min(
-                    1,
-                    food.timer / 1
-                );
-
-
-            ctx.globalAlpha =
-                alpha;
-
-
-            ctx.fillStyle =
-                food.fullRestore
-                    ? "#ffd700"
-                    : "#f4a261";
-
-
-            ctx.beginPath();
-
-
-            ctx.arc(
-                food.x,
-                food.y,
-                food.size,
-
-                0,
-                Math.PI * 2
+        ctx.globalAlpha =
+            Math.min(
+                1,
+                food.timer
             );
 
 
-            ctx.fill();
+        ctx.fillStyle =
+            food.fullRestore
+                ? "#ffd700"
+                : "#f4a261";
 
 
-            ctx.strokeStyle =
-                "#ffffff";
+        ctx.beginPath();
 
-            ctx.lineWidth = 2;
+        ctx.arc(
+            food.x,
+            food.y,
+            food.size,
+            0,
+            Math.PI * 2
+        );
 
-            ctx.stroke();
+        ctx.fill();
 
 
-            ctx.globalAlpha = 1;
+        ctx.strokeStyle = "#ffffff";
 
-        }
-    );
+        ctx.lineWidth = 2;
+
+        ctx.stroke();
+
+
+        ctx.globalAlpha = 1;
+
+    });
 
 }
 
@@ -4434,82 +2670,63 @@ function drawFood() {
 
 function drawBossCracks() {
 
-    bossCracks.forEach(
-        crack => {
+    bossCracks.forEach(crack => {
 
-            const alpha =
-                crack.timer /
-                0.9;
+        const alpha =
+            crack.timer / 0.9;
 
 
-            ctx.save();
+        ctx.save();
+
+        ctx.translate(
+            crack.x,
+            crack.y
+        );
+
+        ctx.rotate(
+            crack.angle
+        );
 
 
-            ctx.translate(
-                crack.x,
-                crack.y
-            );
+        ctx.strokeStyle =
+            `rgba(30,10,30,${alpha})`;
+
+        ctx.lineWidth =
+            crack.width;
 
 
-            ctx.rotate(
-                crack.angle
-            );
+        ctx.beginPath();
+
+        ctx.moveTo(0, 0);
+
+        ctx.lineTo(
+            crack.length,
+            0
+        );
+
+        ctx.stroke();
 
 
-            ctx.strokeStyle =
-                `rgba(
-                    30,
-                    10,
-                    30,
-                    ${alpha}
-                )`;
+        ctx.lineWidth = 4;
 
 
-            ctx.lineWidth =
-                crack.width;
+        ctx.beginPath();
+
+        ctx.moveTo(70, 0);
+        ctx.lineTo(100, -20);
+
+        ctx.moveTo(120, 0);
+        ctx.lineTo(155, 22);
+
+        ctx.moveTo(175, 0);
+        ctx.lineTo(200, -18);
+
+        ctx.stroke();
 
 
-            ctx.beginPath();
+        ctx.restore();
 
-
-            ctx.moveTo(
-                0,
-                0
-            );
-
-
-            ctx.lineTo(
-                crack.length,
-                0
-            );
-
-
-            ctx.stroke();
-
-
-            ctx.lineWidth = 4;
-
-
-            ctx.beginPath();
-
-
-            ctx.moveTo(70, 0);
-            ctx.lineTo(100, -20);
-
-            ctx.moveTo(120, 0);
-            ctx.lineTo(155, 22);
-
-            ctx.moveTo(175, 0);
-            ctx.lineTo(200, -18);
-
-
-            ctx.stroke();
-
-
-            ctx.restore();
-
-        }
-    );
+    });
 
 }
 
@@ -4520,18 +2737,12 @@ function drawBossCracks() {
 
 function drawAttackRange() {
 
-    const attackRange =
-        110;
-
-
     ctx.beginPath();
-
 
     ctx.arc(
         player.x,
         player.y,
-        attackRange,
-
+        110,
         0,
         Math.PI * 2
     );
@@ -4540,9 +2751,7 @@ function drawAttackRange() {
     ctx.strokeStyle =
         "rgba(255,255,255,.25)";
 
-
     ctx.lineWidth = 2;
-
 
     ctx.stroke();
 
@@ -4565,48 +2774,34 @@ function drawRicochet() {
     }
 
 
-    ctx.strokeStyle =
-        "#ffffff";
-
+    ctx.strokeStyle = "#ffffff";
 
     ctx.lineWidth = 4;
-
 
     ctx.beginPath();
 
 
-    let previousX =
-        player.x;
+    let previousX = player.x;
+    let previousY = player.y;
 
 
-    let previousY =
-        player.y;
+    ricochetTargets.forEach(enemy => {
+
+        ctx.moveTo(
+            previousX,
+            previousY
+        );
+
+        ctx.lineTo(
+            enemy.x,
+            enemy.y
+        );
 
 
-    ricochetTargets.forEach(
-        enemy => {
+        previousX = enemy.x;
+        previousY = enemy.y;
 
-            ctx.moveTo(
-                previousX,
-                previousY
-            );
-
-
-            ctx.lineTo(
-                enemy.x,
-                enemy.y
-            );
-
-
-            previousX =
-                enemy.x;
-
-
-            previousY =
-                enemy.y;
-
-        }
-    );
+    });
 
 
     ctx.stroke();
@@ -4620,27 +2815,17 @@ function drawRicochet() {
 
 function drawUltimateFlash() {
 
-    if (
-        ultimateFlashTimer <= 0
-    ) {
-
+    if (ultimateFlashTimer <= 0) {
         return;
-
     }
 
 
     const alpha =
-        ultimateFlashTimer /
-        0.35;
+        ultimateFlashTimer / 0.35;
 
 
     ctx.fillStyle =
-        `rgba(
-            255,
-            255,
-            255,
-            ${alpha}
-        )`;
+        `rgba(255,255,255,${alpha})`;
 
 
     ctx.fillRect(
@@ -4656,21 +2841,19 @@ function drawUltimateFlash() {
 /* =========================================================
    PAUSE
 ========================================================= */
-
 function drawPauseScreen() {
 
-    if (
-        !gamePaused
-    ) {
-
+    if (!gamePaused) {
         return;
-
     }
 
+    /* DARK + BLUR EFFECT */
 
-    ctx.fillStyle =
-        "rgba(0,0,0,0.55)";
+    ctx.save();
 
+    ctx.filter = "blur(6px)";
+
+    ctx.fillStyle = "rgba(0,0,0,0.45)";
 
     ctx.fillRect(
         0,
@@ -4679,51 +2862,162 @@ function drawPauseScreen() {
         HEIGHT
     );
 
-
-    ctx.fillStyle =
-        "#ffffff";
+    ctx.restore();
 
 
-    ctx.textAlign =
-        "center";
+    /* PAUSE MENU */
+
+    ctx.fillStyle = "rgba(0,0,0,0.78)";
+
+    ctx.fillRect(
+        250,
+        45,
+        500,
+        560
+    );
 
 
-    ctx.textBaseline =
-        "middle";
+    ctx.strokeStyle = "#555";
+
+    ctx.lineWidth = 2;
+
+    ctx.strokeRect(
+        250,
+        45,
+        500,
+        560
+    );
 
 
-    ctx.font =
-        "bold 48px Arial";
+    /* TITLE */
 
+    ctx.fillStyle = "#ffffff";
+
+    ctx.textAlign = "center";
+
+    ctx.textBaseline = "middle";
+
+    ctx.font = "bold 42px Arial";
 
     ctx.fillText(
         "PAUSED",
-
         WIDTH / 2,
-
-        HEIGHT / 2 - 20
+        90
     );
 
 
-    ctx.font =
-        "20px Arial";
+    /* CONTROLS */
 
+    ctx.font = "bold 19px Arial";
+
+    ctx.fillStyle = "#d93636";
 
     ctx.fillText(
-        "Press ESC to resume",
-
+        "CONTROLS",
         WIDTH / 2,
-
-        HEIGHT / 2 + 35
+        145
     );
 
 
-    ctx.textAlign =
-        "left";
+    ctx.font = "14px Arial";
+
+    ctx.fillStyle = "#ffffff";
+
+    const controls = [
+
+        "W A S D  —  Move",
+
+        "SHIFT  —  Sprint",
+
+        "LMB  —  Attack",
+
+        "RMB  —  Block",
+
+        "Q / E / R  —  Skills",
+
+        "T  —  Ultimate",
+
+        "SPACE  —  Restore",
+
+        "ESC  —  Resume"
+
+    ];
 
 
-    ctx.textBaseline =
-        "alphabetic";
+    controls.forEach((text, index) => {
+
+        ctx.fillText(
+            text,
+            WIDTH / 2,
+            175 + index * 22
+        );
+
+    });
+
+
+    /* RULES */
+
+    ctx.font = "bold 19px Arial";
+
+    ctx.fillStyle = "#d93636";
+
+    ctx.fillText(
+        "RULES",
+        WIDTH / 2,
+        375
+    );
+
+
+    ctx.font = "14px Arial";
+
+    ctx.fillStyle = "#ffffff";
+
+    const rules = [
+
+        "Defeat enemies to gain XP.",
+
+        "Leveling up increases your power.",
+
+        "Watch your HP, Mana, Hunger and Energy.",
+
+        "Blocking reduces incoming damage.",
+
+        "Sprint and Block consume Energy.",
+
+        "Energy locks at 20% until fully restored.",
+
+        "Bosses appear after enough enemies are defeated."
+
+    ];
+
+
+    rules.forEach((text, index) => {
+
+        ctx.fillText(
+            text,
+            WIDTH / 2,
+            405 + index * 23
+        );
+
+    });
+
+
+    /* RESUME MESSAGE */
+
+    ctx.font = "bold 15px Arial";
+
+    ctx.fillStyle = "#aaaaaa";
+
+    ctx.fillText(
+        "PRESS ESC TO RESUME",
+        WIDTH / 2,
+        580
+    );
+
+
+    ctx.textAlign = "left";
+
+    ctx.textBaseline = "alphabetic";
 
 }
 
@@ -4734,19 +3028,12 @@ function drawPauseScreen() {
 
 function update(dt) {
 
-    if (
-        !gameStarted ||
-        gamePaused
-    ) {
-
+    if (!gameStarted || gamePaused) {
         return;
-
     }
 
 
-    if (
-        playerStunTimer <= 0
-    ) {
+    if (playerStunTimer <= 0) {
 
         updatePlayer(dt);
 
@@ -4754,35 +3041,11 @@ function update(dt) {
 
     else {
 
-        /*
-         * Player can still turn while stunned.
-         */
-
-        if (
-            mobileInput.joystickX !== 0 ||
-            mobileInput.joystickY !== 0
-        ) {
-
-            player.facing =
-                Math.atan2(
-                    mobileInput.joystickY,
-                    mobileInput.joystickX
-                );
-
-        }
-
-        else {
-
-            player.facing =
-                Math.atan2(
-                    mouse.y -
-                    player.y,
-
-                    mouse.x -
-                    player.x
-                );
-
-        }
+        player.facing =
+            Math.atan2(
+                mouse.y - player.y,
+                mouse.x - player.x
+            );
 
     }
 
@@ -4800,26 +3063,24 @@ function update(dt) {
     updateHUD();
 
 
-    /* =====================================================
-       DEATH
-    ===================================================== */
-
-    if (
-        player.hp <= 0
-    ) {
+    if (player.hp <= 0) {
 
         player.hp = 0;
 
         gameStarted = false;
 
+        mouse.left = false;
+        mouse.right = false;
 
-        /*
-         * No refresh is required anymore.
-         *
-         * The player can press RESTART.
-         */
 
-        gamePaused = false;
+        document.getElementById(
+            "restartButton"
+        ).style.display = "block";
+
+
+        alert(
+            "You died! Press RESTART to play again."
+        );
 
     }
 
@@ -4859,19 +3120,19 @@ function draw() {
 
 function gameLoop(timestamp) {
 
+    if (!lastTime) {
+        lastTime = timestamp;
+    }
+
+
     const dt =
         Math.min(
             0.05,
-
-            (
-                timestamp -
-                lastTime
-            ) / 1000
+            (timestamp - lastTime) / 1000
         );
 
 
-    lastTime =
-        timestamp;
+    lastTime = timestamp;
 
 
     update(dt);
@@ -4879,11 +3140,45 @@ function gameLoop(timestamp) {
     draw();
 
 
-    requestAnimationFrame(
-        gameLoop
-    );
+    requestAnimationFrame(gameLoop);
 
 }
+
+
+/* =========================================================
+   SKILL BUTTONS
+========================================================= */
+
+document
+    .getElementById("skillQ")
+    .addEventListener(
+        "click",
+        () => useSkill("Q")
+    );
+
+
+document
+    .getElementById("skillE")
+    .addEventListener(
+        "click",
+        () => useSkill("E")
+    );
+
+
+document
+    .getElementById("skillR")
+    .addEventListener(
+        "click",
+        () => useSkill("R")
+    );
+
+
+document
+    .getElementById("skillT")
+    .addEventListener(
+        "click",
+        () => useSkill("T")
+    );
 
 
 /* =========================================================
@@ -4894,11 +3189,4 @@ updateSkillManaCosts();
 
 updateHUD();
 
-
-lastTime =
-    performance.now();
-
-
-requestAnimationFrame(
-    gameLoop
-);
+requestAnimationFrame(gameLoop);
