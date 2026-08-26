@@ -564,10 +564,9 @@ function showLoreMessage() {
 /* MAP BUTTON */
 function openMap() {
 
-    alert(
+   alert(
         "The Red Verse Map is currently being constructed."
     );
-
 }
 
 
