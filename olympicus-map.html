@@ -1,0 +1,317 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Olympicus | Red Verse</title>
+
+    <!-- OLYMPICUS MAP CSS -->
+    <link
+        rel="stylesheet"
+        href="olympicus-map.css"
+    >
+
+</head>
+
+<body>
+
+    <!-- =========================================
+         RED VERSE NAVIGATION
+    ========================================== -->
+
+    <header class="rv-map-navbar">
+
+        <a
+            href="../index.html#home"
+            class="rv-map-logo"
+        >
+            RED VERSE
+        </a>
+
+        <nav class="rv-map-links">
+
+            <a
+                href="../index.html#home"
+                class="rv-map-back-home"
+            >
+                GO BACK HOME
+            </a>
+
+        </nav>
+
+        <!-- MOBILE HAMBURGER -->
+
+        <button
+            class="rv-map-hamburger"
+            id="rvMapHamburger"
+            type="button"
+            aria-label="Open menu"
+            aria-expanded="false"
+        >
+
+            <span></span>
+            <span></span>
+            <span></span>
+
+        </button>
+
+    </header>
+
+
+    <!-- =========================================
+         MOBILE MENU
+    ========================================== -->
+
+    <div
+        class="rv-map-mobile-menu"
+        id="rvMapMobileMenu"
+    >
+
+        <a
+            href="../index.html#home"
+        >
+            GO BACK HOME
+        </a>
+
+        <div class="rv-map-about">
+
+            <div class="rv-map-about-title">
+                ABOUT RED VERSE
+            </div>
+
+            <p>
+                The official Encyclopedia of The Red Verse.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================
+         OLYMPICUS MAP PAGE
+    ========================================== -->
+
+    <main class="map-page">
+
+
+        <!-- =====================================
+             MAP SECTION
+        ====================================== -->
+
+        <section class="map-section">
+
+            <div
+                class="map-frame"
+                id="mapFrame"
+            >
+
+
+                <!-- =================================
+                     MAP CONTAINER
+                ================================== -->
+
+                <div
+                    class="map-container"
+                    id="mapContainer"
+                >
+
+
+                    <!-- =============================
+                         MAP IMAGE
+                    ============================== -->
+
+                    <img
+                        id="mapImage"
+                        src="olympicus-maps.png"
+                        alt="Olympicus Map"
+                        draggable="false"
+                    >
+
+
+                    <!-- =============================
+                         MAP LABELS
+                    ============================== -->
+
+                    <div
+                        class="map-labels"
+                        aria-hidden="false"
+                    >
+
+
+                        <!-- =============================
+                             CONTINENTS
+                        ============================== -->
+
+                        <div
+                            class="map-label continent-label continent-1"
+                        >
+                            MYSTRANA
+                        </div>
+
+                        <div
+                            class="map-label continent-label continent-2"
+                        >
+                            MADAKIA
+                        </div>
+
+                        <div
+                            class="map-label continent-label continent-3"
+                        >
+                            CRETE
+                        </div>
+
+
+                        <!-- =============================
+                             COUNTRIES
+                        ============================== -->
+
+                        <div
+                            class="map-label country-label country-1"
+                            data-country="Vision"
+                            data-characters="James Goldsman, Jester Dawn"
+                        >
+                            VISION
+                        </div>
+
+
+                        <div
+                            class="map-label country-label country-2"
+                            data-country="Sevvera"
+                            data-characters="Alex Sakuro"
+                        >
+                            SEVVERA
+                        </div>
+
+
+                        <div
+                            class="map-label country-label country-3"
+                            data-country="Balik-Tanaw"
+                            data-characters="Mac Whitlock"
+                        >
+                            BALIK-TANAW
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- =================================
+                     MAP HELP
+                ================================== -->
+
+                <div class="map-help">
+
+                    ↑ Zoom In
+
+                    &nbsp;&nbsp;
+
+                    ↓ Zoom Out
+
+                    &nbsp;&nbsp;
+
+                    •
+
+                    &nbsp;&nbsp;
+
+                    Drag to Explore
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================================
+             COUNTRY INFORMATION PANEL (MOVED OUTSIDE MAP)
+        ========================================== -->
+
+        <div
+            class="country-info-panel"
+            id="countryInfoPanel"
+        >
+
+
+            <!-- CLOSE BUTTON -->
+
+            <button
+                id="countryInfoClose"
+                class="country-info-close"
+                type="button"
+                aria-label="Close country information"
+            >
+                &times;
+            </button>
+
+
+            <!-- EYEBROW -->
+
+            <p class="country-info-eyebrow">
+                COUNTRY
+            </p>
+
+
+            <!-- COUNTRY NAME -->
+
+            <h2 id="countryInfoName">
+                COUNTRY NAME
+            </h2>
+
+
+            <!-- DIVIDER -->
+
+            <div class="country-info-divider"></div>
+
+
+            <!-- CHARACTERS -->
+
+            <h3 class="country-info-title">
+                CHARACTERS
+            </h3>
+
+
+            <ul id="countryCharacterList"></ul>
+
+
+        </div>
+
+
+        <!-- =========================================
+             FOOTER
+        ========================================== -->
+
+        <footer class="map-footer">
+
+            <p class="copyright">
+                The official Encyclopedia of The Red Verse
+		  © 2026 Red Verse
+            </p>
+
+        </footer>
+
+
+    </main>
+
+
+    <!-- =========================================
+         JAVASCRIPT
+    ========================================== -->
+
+    <script src="olympicus-map.js"></script>
+
+
+</body>
+
+</html>
